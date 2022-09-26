@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TemplateRequest extends FormRequest
@@ -27,7 +29,7 @@ class TemplateRequest extends FormRequest
             'title' => 'required|max:255',
             'body' => 'required',
             'state' => 'required|integer|between:0,1',
-            'time' => 'required|max:255'
+            // paramer como created_at y updated_at so  n manejados por en Templatecontroller
         ];
     }
 }

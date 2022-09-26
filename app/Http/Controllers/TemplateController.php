@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TemplateRequest;
 use App\Models\Template;
+use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +19,7 @@ class TemplateController extends Controller
         $template->body = $request->body;
         $template->state = $request->state;
         $template->user_id = $request->user;
-        $template->created_at = $request->time;
+        $template->created_at = Carbon::now(new DateTimeZone('America/Lima'));
         $template->save();
 
         return response()->json([
@@ -47,11 +49,15 @@ class TemplateController extends Controller
     public function update(TemplateRequest $request, $id)
     {
         $template = Template::find($id);
-        $template->update($request->all());
+        $template->title = $request->title;
+        $template->body = $request->body;
+        $template->state = $request->state;
+        $template->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
+        $template->save();
+
         return response()->json([
             'res' => true,
-            'msg' => $request->all(),
-            'obj' => $template,
+            'msg' => "Se Ha Actualizado La Plantilla"
         ], 200);
     }
 
