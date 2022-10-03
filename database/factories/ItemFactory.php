@@ -17,7 +17,8 @@ class ItemFactory extends Factory
     public function definition()
     {
         return [
-            'body' =>  ['name',  'mount', 'count', 'data'],
+            'title' => $this->faker->word(),
+            'body' => ['col1' , 'name','col2', 'mount', 'col3', 'count','col4', 'data'],
             'amount' => $this->faker->randomFloat(2, 400, 1600),
 
         ];

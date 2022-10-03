@@ -64,6 +64,7 @@ class CardController extends Controller
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Cuenta No Creada",
+                'error' => $e->getMessage(),
             ], 200);
         }
     }
@@ -111,7 +112,7 @@ class CardController extends Controller
     
     public function destroy($id)
     {
-        $deleted = DB::table('cards')->where('id', '=', $id)->delete();
+        $deleted = DB::statement('call SP_Delete_Card(?)', [ $id ]);
 
         $res = $deleted > 0 ? true : false;
         $msg = $deleted > 0 ? 'Se a eliminado la Cuenta Con Exito': 'No existe la plantilla a eliminar';
