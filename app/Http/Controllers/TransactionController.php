@@ -31,7 +31,7 @@ class TransactionController extends Controller
                 $request->cards_id,
                 $item->id,
                 $request->amount,
-                $request->user_id
+                auth()->user()->id
             ]);
 
             return response()->json([
@@ -108,7 +108,8 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => 'Parece que Hubo un Error'
+                'msg' => 'Parece que Hubo un Error',
+                "e" => $e->getMessage()
             ]);
         }
     }

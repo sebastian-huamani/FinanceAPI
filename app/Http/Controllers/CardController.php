@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreditCardRequest;
 use App\Models\Card;
-use App\Http\Requests\DebitCardRequest;
 use Carbon\Carbon;
 use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\CreditCardRequest;
+use App\Http\Requests\DebitCardRequest;
 
 class CardController extends Controller
 {
@@ -23,7 +23,7 @@ class CardController extends Controller
                 $request->name_banck,
                 $request->card_expiration_date,
                 $request->type_cards_id,
-                $request->user_id,
+                auth()->user()->id,
                 $dateNow,
             ]);
             return response()->json([
@@ -49,7 +49,7 @@ class CardController extends Controller
                 $request->name_banck,
                 $request->card_expiration_date,
                 $request->type_cards_id,
-                $request->user_id,
+                auth()->user()->id,
                 $dateNow,
                 $request->billing_cycle,
                 $request->closing_date,
@@ -71,26 +71,32 @@ class CardController extends Controller
 
     public function showAll()
     {
-        $cards = Card::get();
+
+        
+        $cards = Card::where('user_id', '=', auth()->user()->id)->get();
+
+        
+
         return response()->json([
             'res' => true,
             'msg' => $cards,
         ], 200);
     }
-
+    
     public function showOne(Request $request)
     {
         $card = Card::where('id', '=', $request->id)->get();
+
         return response()->json([
             'res' => true,
-            'msg' => $card,
+            'msg' => $card
         ], 200);
     }
 
     public function update(Request $request, $id)
     {
         try {
-            $card = Card::find($id);
+            $card = Card::where('user_id','=',auth()->user()->id)->where('id','=', $id)->first();
             $card->name = $request->name;
             $card->bottom_line = $request->bottom_line;
             $card->name_banck = $request->name_banck;
@@ -112,7 +118,7 @@ class CardController extends Controller
     
     public function destroy($id)
     {
-        $deleted = DB::statement('call SP_Delete_Card(?)', [ $id ]);
+        $deleted = DB::statement('call SP_Delete_Card(?,?)', [ $id, auth()->user()->id ]);
 
         $res = $deleted > 0 ? true : false;
         $msg = $deleted > 0 ? 'Se a eliminado la Cuenta Con Exito': 'No existe la plantilla a eliminar';

@@ -18,7 +18,7 @@ class TemplateController extends Controller
         $template->title = $request->title;
         $template->body = $request->body;
         $template->state = $request->state;
-        $template->user_id = $request->user;
+        $template->user_id = auth()->user()->id;
         $template->created_at = Carbon::now(new DateTimeZone('America/Lima'));
         $template->save();
 
@@ -31,6 +31,7 @@ class TemplateController extends Controller
     public function showAll()
     {
         $templates = Template::get();
+        
         return response()->json([
             'res' => true,
             'msg' => $templates,
@@ -39,11 +40,20 @@ class TemplateController extends Controller
 
     public function showOne(Request $request)
     {
-        $template = Template::where('id','=', $request->id)->get();
-        return response()->json([
-            'res' => true,
-            'msg' => $template,
-        ], 200);
+        try {
+            $template = Template::where('id','=', $request->id)->get();
+            
+            return response()->json([
+                'res' => true,
+                'msg' => $template,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $template,
+                'e' => $e->getMessage(),
+            ], 200);
+        }
     }
 
     public function update(TemplateRequest $request, $id)
