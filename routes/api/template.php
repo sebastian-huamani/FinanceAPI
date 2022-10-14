@@ -6,7 +6,7 @@ use App\Http\Controllers\TemplateController;
 
 
 Route::middleware(['auth:sanctum'])->group(function(){
-    
+
     Route::post('/template/create', [ TemplateController::class, 'create' ]);
     Route::get('/template/showOne/{id}', [ TemplateController::class, 'showOne' ]);
     Route::get('/template/showAll', [ TemplateController::class, 'showAll' ]);

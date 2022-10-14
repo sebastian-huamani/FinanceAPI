@@ -24,10 +24,10 @@ class ItemRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required|integer',
             'title' => 'required|max:255',
             'body' => 'required',
             'amount' => 'required|between:-999999.99,99999.99',
-            'cards_id' => 'required|integer',
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\TemplateRequest;
 use App\Models\Template;
 use Carbon\Carbon;
 use DateTimeZone;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -30,7 +31,7 @@ class TemplateController extends Controller
 
     public function showAll()
     {
-        $templates = Template::get();
+        $templates = Template::where('user_id', auth()->user()->id)->get();
         
         return response()->json([
             'res' => true,
@@ -41,7 +42,11 @@ class TemplateController extends Controller
     public function showOne(Request $request)
     {
         try {
-            $template = Template::where('id','=', $request->id)->get();
+            $template = Template::where('id', $request->id)->where('user_id', auth()->user()->id)->first();
+
+            if( !$template ){
+                throw new Exception();
+            }
             
             return response()->json([
                 'res' => true,
@@ -50,25 +55,37 @@ class TemplateController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => $template,
-                'e' => $e->getMessage(),
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
             ], 200);
         }
     }
 
     public function update(TemplateRequest $request, $id)
     {
-        $template = Template::find($id);
-        $template->title = $request->title;
-        $template->body = $request->body;
-        $template->state = $request->state;
-        $template->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
-        $template->save();
+        try {
+            $template = Template::where('user_id',  auth()->user()->id)->where('id', $id)->first();
+            
+            
+            if( !$template ){
+                throw new Exception();
+            }
 
-        return response()->json([
-            'res' => true,
-            'msg' => "Se Ha Actualizado La Plantilla"
-        ], 200);
+            $template->title = $request->title;
+            $template->body = $request->body;
+            $template->state = $request->state;
+            $template->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
+            $template->save();
+    
+            return response()->json([
+                'res' => true,
+                'msg' => "Se Ha Actualizado La Plantilla"
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+            ], 200);
+        }
     }
 
     

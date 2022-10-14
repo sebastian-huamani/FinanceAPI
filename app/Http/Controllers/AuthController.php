@@ -48,14 +48,16 @@ class AuthController extends Controller
 
     public function infoUser(Request $request )
     {
-        return $request->user();
+        return response()->json(
+            $request->user()
+        );
     }
 
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        // $user->tokens()->delete();
+        // $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
         
         return response()->json([
             'msg' => 'Te has Deslogeado'

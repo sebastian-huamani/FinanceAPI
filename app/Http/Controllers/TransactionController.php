@@ -7,18 +7,19 @@ use App\Models\Item;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use DateTimeZone;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
-    
+
 
     public function createItemCount(ItemRequest $request)
     {
         try {
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            
+
             $item = new Item();
             $item->title = $request->title;
             $item->body = $request->body;
@@ -38,7 +39,6 @@ class TransactionController extends Controller
                 'res' => true,
                 'msg' => "Se Ha Agregado A La Lista De Movimientos",
             ]);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
@@ -47,69 +47,82 @@ class TransactionController extends Controller
         }
     }
 
-    public function destory($id)
-    {
-        try {
-            
-            $item = Item::find($id);
-            $card = Transaction::where('items_id', '=', $item->id)->first();
-            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            
-            DB::statement('call SP_Delete_Item(?, ?, ?, ?)', [ 
-                $item->id,
-                $card->cards_id,
-                $item->amount,
-                $dateNow
-            ]);
-
-            return response()->json([
-                'res' => true,
-                'msg' => 'Se ha eliminado con exito'
-            ]);
-
-        } catch (\Exception $e) {
-            
-            return response()->json([
-                'res' => false,
-                'msg' => $e->getMessage()
-            ]);
-        }
-    }
-
     public function showAllItemsCount($id)
     {
         try {
-            $data = Item::select('*')
-                    ->join('transactions', 'transactions.items_id', '=', 'items.id')
-                    ->join('cards', 'cards.id', '=', 'transactions.cards_id')
-                    ->where('cards.id', '=', $id)->get();
+            $items = Item::select('*')
+                ->join('transactions', 'transactions.items_id', '=', 'items.id')
+                ->join('cards', 'cards.id', '=', 'transactions.cards_id')
+                ->where('cards.id', '=', $id)
+                ->where('cards.user_id', auth()->user()->id)
+                ->get();
+
+            if (!$items->first()) {
+                throw new Exception();
+            }
+
             return response()->json([
                 'res' => true,
-                'msg' => $data,
+                'msg' => $items,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => 'Hubo Un Error',
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
             ], 200);
         }
     }
-    public function showOne($id)
+
+    public function showAllItemsUser()
     {
         try {
-            $data = Item::find($id);
+            $items = Item::select('*')
+                ->join('transactions', 'transactions.items_id', '=', 'items.id')
+                ->join('cards', 'cards.id', '=', 'transactions.cards_id')
+                ->where('cards.user_id', auth()->user()->id)
+                ->get();
+
+            if (!$items->first()) {
+                throw new Exception();
+            }
 
             return response()->json([
                 'res' => true,
-                'msg' => $data
-            ]);
-
-            
+                'msg' => $items,
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => 'Parece que Hubo un Error',
-                "e" => $e->getMessage()
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+            ], 200);
+        }
+    }
+
+    public function showOne($id)
+    {
+        try {
+            $item = Item::select('items.id', 'items.title', 'items.body', 'items.amount', 'items.created_at', 'items.updated_at')
+            ->join('transactions', 'transactions.items_id', 'items.id')
+            ->join('cards', 'cards.id', 'transactions.cards_id')
+            ->where('cards.user_id', auth()->user()->id)
+            ->where('items.id', $id)
+            ->first();
+
+
+            if (!$item) {
+                throw new Exception();
+            }
+
+            return response()->json([
+                'res' => true,
+                'msg' => $item
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'res' => false,
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
             ]);
         }
     }
@@ -117,13 +130,20 @@ class TransactionController extends Controller
     public function editItemCount(ItemRequest $request)
     {
         try {
-            $item = Item::find($request->id);
-            $card = Transaction::where('items_id', '=', $item->id)->first();
+
+            $item = Item::select('items.id', 'items.title', 'items.body', 'items.amount', 'items.created_at', 'items.updated_at', 'transactions.cards_id', )
+            ->join('transactions', 'transactions.items_id', 'items.id')
+            ->join('cards', 'cards.id', 'transactions.cards_id')
+            ->where('cards.user_id', auth()->user()->id)
+            ->where('items.id', $request->id)
+            ->first();
+
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-    
-            DB::statement('call SP_Update_Item(?, ?, ?, ?, ?, ?, ?)', [
+
+
+            $res = DB::statement('call SP_Update_Item(?, ?, ?, ?, ?, ?, ?)', [
                 $item->id,
-                $card->cards_id,
+                $item->cards_id,
                 $request->title,
                 json_encode($request->body),
                 $item->amount,
@@ -133,16 +153,51 @@ class TransactionController extends Controller
 
             return response()->json([
                 'res' => true,
-                'msg' => $request->all()
+                'msg' => "Cuenta Actualizada Con Exito",
+                'item' => $item,
+                'ress' => $res,
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => $e->getMessage()
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
             ]);
         }
     }
 
+    public function destory($id)
+    {
+        try {
+            $item = Item::select('items.id as id_item', 'cards.id as id_card' , 'items.amount' )
+            ->join('transactions', 'transactions.items_id', 'items.id')
+            ->join('cards', 'cards.id', 'transactions.cards_id')
+            ->where('cards.user_id', auth()->user()->id)
+            ->where('items.id', $id)
+            ->first();
 
+            if ( !$item ) {
+                throw new Exception();
+            }
+
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+
+            DB::statement('call SP_Delete_Item(?, ?, ?, ?)', [
+                $item->id_item,
+                $item->id_card,
+                $item->amount,
+                $dateNow
+            ]);
+
+            return response()->json([
+                'res' => true,
+                'msg' => 'Se ha eliminado con exito'
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'res' => false,
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+            ]);
+        }
+    }
 }
