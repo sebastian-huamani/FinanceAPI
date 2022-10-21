@@ -1,4 +1,4 @@
-<h1 align="center"> Despues de un commit </h1>
+<h1 align="center"> Despues de un clone </h1>
 <p align="center"> Despues de clonar un repositorio de laravel necesitaremos hacer algunos pasos adicionales para que todo valla bien. </p>
 
 
