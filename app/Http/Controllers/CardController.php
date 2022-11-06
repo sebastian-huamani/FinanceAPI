@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CreditCardRequest;
 use App\Http\Requests\DebitCardRequest;
+use App\Models\DateCard;
 use Exception;
 
 class CardController extends Controller
@@ -70,26 +71,37 @@ class CardController extends Controller
 
     public function showAll()
     {
-        $cards = Card::where('user_id', auth()->user()->id)->get();
-
-        return response()->json([
-            'res' => true,
-            'msg' => $cards,
-        ], 200);
+        try {
+            $data = DB::select('CALL SP_Show_Cards(?)', [auth()->user()->id]);
+            
+            if ( !$data ) {
+                throw new Exception();
+            }
+            
+            return response()->json([
+                'res' => true,
+                'msg' => $data,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'res' => false,
+                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+            ], 200);
+        }
     }
 
     public function showOne(Request $request)
     {
         try {
-            $card = Card::where('id', $request->id)->where('user_id', auth()->user()->id)->first();
-    
-            if( !$card ){
+            $data = DB::select('CALL SP_ShowData_Cards(?, ?)', [$request->id, auth()->user()->id]);
+            
+            if ( !$data ) {
                 throw new Exception();
             }
-    
+
             return response()->json([
                 'res' => true,
-                'msg' => $card
+                'msg' => $data[0]
             ], 200);
 
         } catch (\Exception $e) {
@@ -98,11 +110,13 @@ class CardController extends Controller
                 'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
             ], 200);
         }
+
     }
 
     public function update(Request $request, $id)
     {
         try {
+            
             $card = Card::where('user_id', '=', auth()->user()->id)->where('id', '=', $id)->first();
 
             if( !$card ){

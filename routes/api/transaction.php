@@ -7,7 +7,7 @@ use App\Http\Controllers\TransactionController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::get('/transaction/count/showAllItemsCount/{id}', [TransactionController::class, 'showAllItemsCount']);
+    Route::post('/transaction/count/showAllItemsCount', [TransactionController::class, 'showAllItemsCount']);
     Route::get('/transaction/count/showAllItemsUser', [TransactionController::class, 'showAllItemsUser']);
     Route::get('/transaction/count/showOne/{id}', [TransactionController::class, 'showOne']);
 

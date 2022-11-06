@@ -30,20 +30,22 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
         if( !Auth::attempt($request->only('email', 'password')) ){
             return response()->json([
-                'msg' => 'Invalid login Credentials'
+                'res' => false,
+                'msg' => 'Credenciales Invalidas',
             ], 401);
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
-        $token = $user->createToken('auth')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'res' => true,
             'access_token' => $token,
             'token_type' => 'Bearer'
         ]);
+
     }
 
     public function infoUser(Request $request )
@@ -60,6 +62,7 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
         
         return response()->json([
+            'res' => true,
             'msg' => 'Te has Deslogeado'
         ]);
     }

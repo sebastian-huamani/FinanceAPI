@@ -47,24 +47,35 @@ class TransactionController extends Controller
         }
     }
 
-    public function showAllItemsCount($id)
+    public function showAllItemsCount(Request $request)
     {
         try {
-            $items = Item::select('*')
+            $items = Item::select('items.id', 'items.title', 'items.body', 'items.amount', 'items.created_at', 'Items.updated_at')
                 ->join('transactions', 'transactions.items_id', '=', 'items.id')
                 ->join('cards', 'cards.id', '=', 'transactions.cards_id')
-                ->where('cards.id', '=', $id)
+                ->where('cards.id', '=', $request->id_card)
                 ->where('cards.user_id', auth()->user()->id)
+                ->whereYear('items.created_at', $request->year)
+                ->whereMonth ('items.created_at', $request->month)
+                ->orderBy('items.created_at', 'desc')
                 ->get();
 
-            if (!$items->first()) {
-                throw new Exception();
-            }
+            // $items = DB::select('CALL SP_Show_All_Items(?, ?, ?, ?)', [
+            //     $request->id_card, 
+            //     auth()->user()->id,
+            //     $request->year,
+            //     $request->month
+            // ]);
+
+            // if (!$items->first()) {
+            //     throw new Exception();
+            // }
 
             return response()->json([
                 'res' => true,
                 'msg' => $items,
             ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
