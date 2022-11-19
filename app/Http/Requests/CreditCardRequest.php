@@ -28,8 +28,6 @@ class CreditCardRequest extends FormRequest
             'bottom_line' => 'required|between:-999999.99,99999.99',
             'name_banck' => 'required|max:255',
             'card_expiration_date' => 'required',
-            'type_cards_id' => 'required|between:1,2',
-            
             'billing_cycle' => 'required|integer|between:1,30',
             'closing_date' => 'required|integer|between:1,30',
             'payment_due_date' => 'required|integer|between:1,30',

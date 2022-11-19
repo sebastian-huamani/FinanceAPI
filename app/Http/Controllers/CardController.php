@@ -19,12 +19,13 @@ class CardController extends Controller
     {
         try {
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            DB::statement('call SP_Create_DebitCard(?,?,?,?,?,?,?)', [
+            DB::statement('call SP_Create_DebitCard(?,?,?,?,?,?,?,?)', [
                 $request->name,
                 $request->bottom_line,
                 $request->name_banck,
                 $request->card_expiration_date,
-                $request->type_cards_id,
+                1,
+                1,
                 auth()->user()->id,
                 $dateNow,
             ]);
@@ -36,6 +37,8 @@ class CardController extends Controller
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Cuenta No Creada",
+                'e' => $e->getMessage(),
+                'request' => $request->all()
             ], 200);
         }
     }
@@ -44,12 +47,13 @@ class CardController extends Controller
     {
         try {
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            DB::statement('call SP_Create_CreditCard(?,?,?,?,?,?,?,?,?,?)', [
+            DB::statement('call SP_Create_CreditCard(?,?,?,?,?,?,?,?,?,?,?)', [
                 $request->name,
                 $request->bottom_line,
                 $request->name_banck,
                 $request->card_expiration_date,
-                $request->type_cards_id,
+                2,
+                1,
                 auth()->user()->id,
                 $dateNow,
                 $request->billing_cycle,
@@ -65,6 +69,7 @@ class CardController extends Controller
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Cuenta No Creada",
                 'error' => $e->getMessage(),
+                'request' => $request->all()
             ], 200);
         }
     }
@@ -108,6 +113,7 @@ class CardController extends Controller
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+                'e' => $e->getMessage()
             ], 200);
         }
 
@@ -116,7 +122,7 @@ class CardController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            
+            $dateCard = null;
             $card = Card::where('user_id', '=', auth()->user()->id)->where('id', '=', $id)->first();
 
             if( !$card ){
@@ -129,16 +135,47 @@ class CardController extends Controller
             $card->card_expiration_date = $request->card_expiration_date;
             $card->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
             $card->save();
+
+            if ($card->date_cards_id != null) {
+                $dateCard = DateCard::where('id', $card->date_cards_id)->first();
+                $dateCard->billing_cycle = $request->billing_cycle;
+                $dateCard->closing_date = $request->closing_date;
+                $dateCard->payment_due_date = $request->payment_due_date;
+                $dateCard->save();
+            }
             
             return response()->json([
                 'res' => true,
-                'msg' => "Se Ha Actualizado La Cuenta"
+                'msg' => "Se Ha Actualizado La Cuenta",
             ], 200);
             
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Cuenta No Actualizada",
+                'e' => $e->getMessage(),
+            ], 200);
+        }
+    }
+
+    public function UpdateState($id)
+    {
+        try {
+            $deleted = DB::statement('call SP_Update_State(?,?,?)', [
+                $id,
+                auth()->user()->id,
+                2
+            ]);
+    
+    
+            return response()->json([
+                'res' => "true",
+                'msg' => 'Se a eliminado la Cuenta Con Exito',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => "true",
+                'msg' => 'Se a eliminado la Cuenta Con Exito',
                 'e' => $e->getMessage()
             ], 200);
         }
@@ -149,11 +186,13 @@ class CardController extends Controller
         $deleted = DB::statement('call SP_Delete_Card(?,?)', [$id, auth()->user()->id]);
 
         $res = $deleted > 0 ? true : false;
-        $msg = $deleted > 0 ? 'Se a eliminado la Cuenta Con Exito' : 'No existe la plantilla a eliminar';
+        $msg = $deleted > 0 ? 'Se a eliminado la Cuenta Con Exito' : 'No existe la Cuenta a eliminar';
 
         return response()->json([
             'res' => $res,
             'msg' => $msg,
         ], 200);
     }
+
+    
 }

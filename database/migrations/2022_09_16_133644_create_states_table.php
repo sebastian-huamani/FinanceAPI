@@ -13,16 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::create('states', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('bottom_line');
-            $table->string('name_banck');
-            $table->date('card_expiration_date');
-            $table->foreignId('type_cards_id')->constrained();
-            $table->foreignId('date_cards_id')->nullable()->unique()->constrained();
-            $table->foreignId('states_id')->constrained();
-            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
@@ -34,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cards');
+        Schema::dropIfExists('states');
     }
 };

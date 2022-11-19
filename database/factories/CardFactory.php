@@ -25,8 +25,9 @@ class CardFactory extends Factory
             'bottom_line' => $this->faker->randomFloat(2, -400, 1600),
             'name_banck' => $this->faker->word(),
             'card_expiration_date' => $this->faker->date('Y_m_d'),
-            'type_cards_id' => $this->faker->randomElement([1, 2]),
+            'type_cards_id' => 1,
             'date_cards_id' => null,
+            'states_id' => 1,
             'user_id' => $this->faker->numberBetween(1, User::count()),
         ];
     }

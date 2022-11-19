@@ -16,7 +16,7 @@ class TransactionSeeder extends Seeder
      */ 
     public function run()
     {
-        $items = Item::factory(60)->create();
+        $items = Item::factory(120)->create();
         $countNTotal = Card::count();
 
         foreach( $items as $item) {

@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\typeCard>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\State>
  */
-class TypeCardFactory extends Factory
+class StateFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,7 @@ class TypeCardFactory extends Factory
     public function definition()
     {
         return [
-            // 'name' => $this->faker->randomElement(['Credit', 'Debit'])
+            
         ];
     }
 }

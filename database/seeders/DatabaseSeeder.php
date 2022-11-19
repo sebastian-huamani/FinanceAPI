@@ -20,7 +20,14 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(3)->create();
         Template::factory(10)->create();
-        TypeCard::factory(2)->create();
+
+        TypeCard::factory(1)->create([
+            'name' => 'Debit'
+        ]);
+
+        TypeCard::factory(1)->create([
+            'name' => 'Credit'
+        ]);
         
         $this->call(CardSeeder::class);
 

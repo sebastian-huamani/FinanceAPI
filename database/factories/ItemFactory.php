@@ -18,9 +18,8 @@ class ItemFactory extends Factory
     {
         return [
             'title' => $this->faker->word(),
-            'body' => ['col1' , 'name','col2', 'mount', 'col3', 'count','col4', 'data'],
-            'amount' => $this->faker->randomFloat(2, 400, 1600),
-
+            'body' => '{"name" : "canel", "mount": "1999.55", "count" : "as", "col3": "dad"}',
+            'amount' => $this->faker->randomFloat(2, -400, 1600),
         ];
     }
 }

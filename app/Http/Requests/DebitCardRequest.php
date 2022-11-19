@@ -28,9 +28,6 @@ class DebitCardRequest extends FormRequest
             'bottom_line' => 'required|between:-999999.99,99999.99',
             'name_banck' => 'required|max:255',
             'card_expiration_date' => 'required',
-            'type_cards_id' => 'required|between:1,2',
-            // 'user_id' => 'required|integer'
-            // paramer como created_at y updated_at so  n manejados por en DebitCardcontroller
         ];
     }
 }
