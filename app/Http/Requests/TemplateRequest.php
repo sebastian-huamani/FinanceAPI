@@ -27,8 +27,8 @@ class TemplateRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'body' => 'required',
-            'state' => 'required|integer|between:0,1',
+            'body' => 'required|array',
+            'state_id' => 'required|integer|between:1,2',
             // paramer como created_at y updated_at so  n manejados por en Templatecontroller
         ];
     }

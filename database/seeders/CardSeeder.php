@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Card;
 use App\Models\DateCard;
-use App\Models\State;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,14 +17,6 @@ class CardSeeder extends Seeder
    
     public function run()
     {
-        State::factory(1)->create([
-            'name' => 'Activo'
-        ]);
-        State::factory(1)->create([
-            'name' => 'Desactivado'
-        ]);
-        
-
         $dateCards =  DateCard::factory(15)->create();
         
         foreach ($dateCards as $dateCard) {

@@ -69,12 +69,22 @@ class AuthController extends Controller
 
     public function pruebas(Request $request)
     {
-        // $request->user()->currentAccessToken()->delete();
-        // $request->user()->tokens()->delete();
-        
-        return response()->json([
-            'res' => $request->all(),
-        ]);
+        // $test = array_combine($request->body, $request->type);
+        try {
+            $arr = [];
+            for ($i=0; $i < sizeof($request->body) ; $i++) { 
+                array_push($arr ,[$request->body[$i], $request->type[$i]] );
+            }
+            return response()->json([
+                'res' => $request->all(),
+                'test' => $arr
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'e' => $e->getMessage()
+            ]);
+        }
     }
 
     

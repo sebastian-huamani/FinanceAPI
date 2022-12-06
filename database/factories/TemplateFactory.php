@@ -19,8 +19,8 @@ class TemplateFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            'body' =>  [ 'name',  'mount', 'count', 'data'],
-            'state' => $this->faker->numberBetween(0,1),
+            'body' => [[123.54,"numero"],["dog","text"]],
+            'states_id' => $this->faker->numberBetween(1, 2),
             'user_id' => $this->faker->numberBetween(1, User::count()),
         ];
     }

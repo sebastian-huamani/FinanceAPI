@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\State;
 use App\Models\Template;
 use App\Models\TypeCard;
 use App\Models\User;
@@ -19,7 +20,16 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::factory(3)->create();
-        Template::factory(10)->create();
+
+        State::factory(1)->create([
+            'name' => 'Activo'
+        ]);
+        State::factory(1)->create([
+            'name' => 'Desactivado'
+        ]);
+        
+        
+        Template::factory(100)->create();
 
         TypeCard::factory(1)->create([
             'name' => 'Debit'

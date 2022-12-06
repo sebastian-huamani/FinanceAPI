@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->json('body');
-            $table->integer('state');
+            $table->foreignId('states_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

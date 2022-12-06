@@ -12,31 +12,55 @@ use Illuminate\Support\Facades\DB;
 
 class TemplateController extends Controller
 {
-    
-    public function create(TemplateRequest $request)
-    {
-        $template = new Template();
-        $template->title = $request->title;
-        $template->body = $request->body;
-        $template->state = $request->state;
-        $template->user_id = auth()->user()->id;
-        $template->created_at = Carbon::now(new DateTimeZone('America/Lima'));
-        $template->save();
 
-        return response()->json([
-            'res' => true,
-            'msg' => "Se Ha agregado una Nueva Plantilla",
-        ], 200);
+    public function create(Request $request)
+    {
+        try {
+            $body = [];
+            for ($i=0; $i < sizeof($request->body) ; $i++) { 
+                array_push($body ,[$request->body[$i], $request->type[$i]] );
+            }
+
+            $template = new Template();
+            $template->title = $request->title;
+            $template->body = $body;
+            $template->states_id = $request->states_id;
+            $template->user_id = auth()->user()->id;
+            $template->created_at = Carbon::now(new DateTimeZone('America/Lima'));
+            $template->save();  
+            
+            return response()->json([
+                'res' => true,
+                'msg' => "Se Ha agregado una Nueva Plantilla",
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage(),
+            ], 200);
+        }
     }
 
     public function showAll()
     {
-        $templates = Template::where('user_id', auth()->user()->id)->get();
-        
-        return response()->json([
-            'res' => true,
-            'msg' => $templates,
-        ], 200);
+        try {
+            $templates = DB::table('templates')
+                ->join('states', 'templates.states_id', '=', 'states.id')
+                ->select('templates.id', 'templates.title', 'templates.body', 'states.name as state', 'templates.created_at')
+                ->where('user_id', auth()->user()->id)  
+                ->orderBy('templates.id', 'desc')
+                ->get();
+
+            return response()->json([
+                'res' => true,
+                'msg' => $templates,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage()
+            ], 200);
+        }
     }
 
     public function showOne(Request $request)
@@ -44,10 +68,10 @@ class TemplateController extends Controller
         try {
             $template = Template::where('id', $request->id)->where('user_id', auth()->user()->id)->first();
 
-            if( !$template ){
+            if (!$template) {
                 throw new Exception();
             }
-            
+
             return response()->json([
                 'res' => true,
                 'msg' => $template,
@@ -60,25 +84,29 @@ class TemplateController extends Controller
         }
     }
 
-    public function update(TemplateRequest $request, $id)
+    public function update(Request $request, $id)
     {
         try {
             $template = Template::where('user_id',  auth()->user()->id)->where('id', $id)->first();
-            
-            
-            if( !$template ){
+
+            $body = [];
+            for ($i=0; $i < sizeof($request->body) ; $i++) { 
+                array_push($body ,[$request->body[$i], $request->type[$i]] );
+            }
+
+            if (!$template) {
                 throw new Exception();
             }
 
             $template->title = $request->title;
-            $template->body = $request->body;
-            $template->state = $request->state;
+            $template->body = $body;
+            $template->states_id = $request->states_id;
             $template->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
             $template->save();
-    
+
             return response()->json([
                 'res' => true,
-                'msg' => "Se Ha Actualizado La Plantilla"
+                'msg' => "Se Ha Actualizado La Plantilla",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -88,13 +116,13 @@ class TemplateController extends Controller
         }
     }
 
-    
+
     public function destroy(Request $request)
     {
-        $deleted = DB::table('templates')->where('id','=',$request->id)->delete();
-        
+        $deleted = DB::table('templates')->where('id', '=', $request->id)->delete();
+
         $res = $deleted > 0 ? true : false;
-        $msg = $deleted > 0 ? 'Se a eliminado la plantilla': 'No existe la plantilla a eliminar';
+        $msg = $deleted > 0 ? 'Se a eliminado la plantilla' : 'No existe la plantilla a eliminar';
 
         return response()->json([
             'res' => $res,

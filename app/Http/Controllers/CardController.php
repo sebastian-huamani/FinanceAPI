@@ -31,14 +31,12 @@ class CardController extends Controller
             ]);
             return response()->json([
                 'res' => true,
-                'msg' => "Se Ha Agregado Una Nueva Cuenta Debito",
+                'msg' => "Has Creado Una Nueva Cuenta Debito",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => "Se Ha Producido Un Error, Cuenta No Creada",
-                'e' => $e->getMessage(),
-                'request' => $request->all()
+                'msg' => "Se Ha Producido Un Error, Cuenta No Creada"
             ], 200);
         }
     }
@@ -62,14 +60,12 @@ class CardController extends Controller
             ]);
             return response()->json([
                 'res' => true,
-                'msg' => "Se Ha Agregado Una Nueva Cuenta Credito",
+                'msg' => "Has Creado Una Nueva Cuenta Credito",
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => "Se Ha Producido Un Error, Cuenta No Creada",
-                'error' => $e->getMessage(),
-                'request' => $request->all()
+                'msg' => "Se Ha Producido Un Error, Cuenta No Creada"
             ], 200);
         }
     }
@@ -146,14 +142,13 @@ class CardController extends Controller
             
             return response()->json([
                 'res' => true,
-                'msg' => "Se Ha Actualizado La Cuenta",
+                'msg' => "Has Actualizado La Cuenta",
             ], 200);
             
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Cuenta No Actualizada",
-                'e' => $e->getMessage(),
             ], 200);
         }
     }
@@ -161,12 +156,11 @@ class CardController extends Controller
     public function UpdateState($id)
     {
         try {
-            $deleted = DB::statement('call SP_Update_State(?,?,?)', [
+            DB::statement('call SP_Update_State(?,?,?)', [
                 $id,
                 auth()->user()->id,
                 2
             ]);
-    
     
             return response()->json([
                 'res' => "true",
@@ -175,8 +169,7 @@ class CardController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'res' => "true",
-                'msg' => 'Se a eliminado la Cuenta Con Exito',
-                'e' => $e->getMessage()
+                'msg' => 'Se Producido Un Error, Intenta de nuevo en unos segundos',
             ], 200);
         }
     }
