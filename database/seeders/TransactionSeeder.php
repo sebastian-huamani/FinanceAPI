@@ -4,16 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\Card;
 use App\Models\Item;
+use App\Models\Template;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Faker\Generator;
+use Illuminate\Support\Facades\DB;
 
 class TransactionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */ 
     public function run()
     {
         $items = Item::factory(120)->create();
@@ -22,7 +21,7 @@ class TransactionSeeder extends Seeder
         foreach( $items as $item) {
 
             Transaction::factory(1)->create([
-                'cards_id' => rand(1, $countNTotal),
+                'cards_id' => $countNTotal,
                 'items_id' => $item->id
             ]);
 

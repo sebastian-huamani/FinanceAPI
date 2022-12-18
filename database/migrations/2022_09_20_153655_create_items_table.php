@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('body');
             $table->decimal('amount');
+            $table->foreignId('templates_id')->constrained();
             $table->timestamps();
         }); 
     }

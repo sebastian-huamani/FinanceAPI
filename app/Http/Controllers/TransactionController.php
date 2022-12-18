@@ -20,11 +20,16 @@ class TransactionController extends Controller
         try {
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
 
+            $body = [];
+            for ($i=0; $i < sizeof($request->body) ; $i++) { 
+                array_push($body ,[$request->template[$i], $request->body[$i]] );
+            }
+
             $item = new Item();
-            $item->title = $request->title;
-            $item->body = $request->body;
+            $item->body = $body;
             $item->amount = $request->amount;
             $item->created_at = $dateNow;
+            $item->templates_id = $request->templates_id;
             $item->save();
 
 
@@ -43,6 +48,7 @@ class TransactionController extends Controller
             return response()->json([
                 'res' => false,
                 'msg' => "Se ha generado un Error",
+                'e' =>$e->getMessage()
             ]);
         }
     }
@@ -50,9 +56,10 @@ class TransactionController extends Controller
     public function showAllItemsCount(Request $request)
     {
         try {
-            $items = Item::select('items.id', 'items.title', 'items.body', 'items.amount', 'items.created_at', 'Items.updated_at')
+            $items = Item::select('items.id', 'items.body', 'items.amount', 'templates.title as type_title_transaction', 'items.created_at', 'Items.updated_at')
                 ->join('transactions', 'transactions.items_id', '=', 'items.id')
                 ->join('cards', 'cards.id', '=', 'transactions.cards_id')
+                ->join('templates', 'templates.id', '=', 'items.templates_id')
                 ->where('cards.id', '=', $request->id_card)
                 ->where('cards.user_id', auth()->user()->id)
                 ->whereYear('items.created_at', $request->year)
@@ -80,6 +87,43 @@ class TransactionController extends Controller
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+            ], 200);
+        }
+    }
+
+    public function showAllItemsHistory(Request $request)
+    {
+        try {
+            // $itemsTransaction = Item::select('items.id', 'items.body', 'items.amount', 'templates.title as type_title_transaction', 'items.created_at', 'Items.updated_at')
+            //     ->join('transactions', 'transactions.items_id', '=', 'items.id')
+            //     ->join('cards', 'cards.id', '=', 'transactions.cards_id')
+            //     ->join('templates', 'templates.id', '=', 'items.templates_id')   
+            //     ->where('cards.id', '=', $request->id_card)
+            //     ->where('cards.user_id', auth()->user()->id)
+            //     ->whereYear('items.created_at', $request->year)
+            //     ->whereMonth ('items.created_at', $request->month)
+            //     ->orderBy('items.created_at', 'desc')
+            //     ->get();
+
+            $itemsTransaction = Item::cursor()->filter(function($item){
+                return $item::select('items.id', 'items.body', 'items.amount', 'items.created_at', 'Items.updated_at')
+                    ->join('transactions', 'transactions.items_id', '=', 'items.id')
+                    ->join('cards', 'cards.id', '=', 'transactions.cards_id')
+                    ->where('cards.user_id', auth()->user()->id)
+                    ->orderBy('items.id', 'desc')
+                    ->get();
+            });
+
+           
+            return response()->json([
+                'res' => true,
+                'msg' => $itemsTransaction,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'e' => $e->getMessage(),
             ], 200);
         }
     }

@@ -18,8 +18,8 @@ class TemplateFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence(),
-            'body' => [[123.54,"numero"],["dog","text"]],
+            'title' => $this->faker->words(3, true),
+            'body' => [[123.54,"number"],["dog","text"]],
             'states_id' => $this->faker->numberBetween(1, 2),
             'user_id' => $this->faker->numberBetween(1, User::count()),
         ];

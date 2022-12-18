@@ -58,7 +58,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // $request->user()->currentAccessToken()->delete();
         $request->user()->tokens()->delete();
         
         return response()->json([
@@ -69,15 +68,14 @@ class AuthController extends Controller
 
     public function pruebas(Request $request)
     {
-        // $test = array_combine($request->body, $request->type);
         try {
-            $arr = [];
+            $body = [];
             for ($i=0; $i < sizeof($request->body) ; $i++) { 
-                array_push($arr ,[$request->body[$i], $request->type[$i]] );
+                array_push($body ,[$request->template[$i], $request->body[$i]] );
             }
             return response()->json([
                 'res' => $request->all(),
-                'test' => $arr
+                'get' => $body,
             ]);
         } catch (\Exception $e) {
             return response()->json([

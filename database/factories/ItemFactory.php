@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Template;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +19,9 @@ class ItemFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->word(),
             'body' => '{"name" : "canel", "mount": "1999.55", "count" : "as", "col3": "dad"}',
             'amount' => $this->faker->randomFloat(2, -400, 1600),
+            'templates_id' => $this->faker->numberBetween(1,Template::count()),
         ];
     }
 }
