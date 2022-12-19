@@ -16,12 +16,11 @@ class TransactionSeeder extends Seeder
     public function run()
     {
         $items = Item::factory(120)->create();
-        $countNTotal = Card::count();
 
         foreach( $items as $item) {
 
             Transaction::factory(1)->create([
-                'cards_id' => $countNTotal,
+                'cards_id' => rand(1, Card::count()),
                 'items_id' => $item->id
             ]);
 
