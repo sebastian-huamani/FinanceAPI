@@ -15,15 +15,26 @@ class TransactionSeeder extends Seeder
 {
     public function run()
     {
-        $items = Item::factory(120)->create();
+        
+        $cards = Card::get();
+        foreach( $cards as $card){
 
-        foreach( $items as $item) {
+            $template = rand(1, 150);
+            $amount = rand(-1000, 1000);
 
-            Transaction::factory(1)->create([
-                'cards_id' => rand(1, Card::count()),
-                'items_id' => $item->id
-            ]);
+            $card->items()->create(['body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
 
+            
+            $template = rand(1, 150);
+            $amount = rand(-1000, 1000);
+
+            $card->items()->create(['body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
+
+
+            $template = rand(1, 150);
+            $amount = rand(-1000, 1000);
+
+            $card->items()->create(['body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
         }
 
     }

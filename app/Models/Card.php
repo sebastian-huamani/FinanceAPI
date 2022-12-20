@@ -10,4 +10,24 @@ class Card extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'bottom_line', 'name_banck', 'card_expiration_date', 'type_cards_id'];
+
+    // One To Many (Inverse) / Belongs To
+    public function state(){
+        return $this->belongsTo(state::class);
+    }
+
+    // One To Many (Inverse) / Belongs To
+    public function type_card(){
+        return $this->belongsTo(TypeCard::class);
+    }
+
+    // One To Many (Inverse) / Belongs To
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    //Many To Many (Polymorphic) inverse
+    public function items(){
+        return $this->morphedByMany('App\Models\Item', 'transactionable');
+    }
 }

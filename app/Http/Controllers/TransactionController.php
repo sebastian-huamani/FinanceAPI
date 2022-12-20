@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ItemRequest;
+use App\Models\Card;
 use App\Models\Item;
+use App\Models\State;
+use App\Models\Template;
 use App\Models\Transaction;
+use App\Models\TypeCard;
+use App\Models\User;
 use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
@@ -94,30 +99,16 @@ class TransactionController extends Controller
     public function showAllItemsHistory(Request $request)
     {
         try {
-            // $itemsTransaction = Item::select('items.id', 'items.body', 'items.amount', 'templates.title as type_title_transaction', 'items.created_at', 'Items.updated_at')
-            //     ->join('transactions', 'transactions.items_id', '=', 'items.id')
-            //     ->join('cards', 'cards.id', '=', 'transactions.cards_id')
-            //     ->join('templates', 'templates.id', '=', 'items.templates_id')   
-            //     ->where('cards.id', '=', $request->id_card)
-            //     ->where('cards.user_id', auth()->user()->id)
-            //     ->whereYear('items.created_at', $request->year)
-            //     ->whereMonth ('items.created_at', $request->month)
-            //     ->orderBy('items.created_at', 'desc')
-            //     ->get();
+            // creando una nueva transaccion tipo Item
+            $card = Card::find(3);
+            
+            $user = User::find(1);
+            $template = Template::find(1);
+            $item = Item::find(1);
 
-            $itemsTransaction = Item::cursor()->filter(function($item){
-                return $item::select('items.id', 'items.body', 'items.amount', 'items.created_at', 'Items.updated_at')
-                    ->join('transactions', 'transactions.items_id', '=', 'items.id')
-                    ->join('cards', 'cards.id', '=', 'transactions.cards_id')
-                    ->where('cards.user_id', auth()->user()->id)
-                    ->orderBy('items.id', 'desc')
-                    ->get();
-            });
-
-           
             return response()->json([
                 'res' => true,
-                'msg' => $itemsTransaction,
+                'card' => $card->items,
             ], 200);
 
         } catch (\Exception $e) {

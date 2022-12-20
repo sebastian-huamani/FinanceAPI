@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class TypeCard extends Model
 {
     use HasFactory;
+
+    // One To Many
+    public function cards(){
+        return $this->hasMany(Card::class);
+    }
 }

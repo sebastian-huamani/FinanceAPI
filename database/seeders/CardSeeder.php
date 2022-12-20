@@ -26,9 +26,9 @@ class CardSeeder extends Seeder
                 'bottom_line' => fake()->randomFloat(2, -400, 1600),
                 'name_banck' => fake()->word(),
                 'card_expiration_date' => fake()->date('Y_m_d'),
-                'type_cards_id' => 2,
+                'type_card_id' => 2,
                 'date_cards_id' => $dateCard->id,
-                'states_id' => 1,
+                'state_id' => 1,
                 'user_id' => $dateCard->user_id,
             ]);
         }

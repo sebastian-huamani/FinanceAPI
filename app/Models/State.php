@@ -8,5 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class State extends Model
 {
     use HasFactory;
-    
+
+    // One To Many
+    public function cards(){
+        return $this->hasMany(Card::class);
+    }
 }

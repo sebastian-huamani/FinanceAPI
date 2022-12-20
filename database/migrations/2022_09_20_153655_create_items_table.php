@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('body');
             $table->decimal('amount');
-            $table->foreignId('templates_id')->constrained();
+            $table->foreignId('template_id')->constrained();
             $table->timestamps();
         }); 
     }

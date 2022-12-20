@@ -9,6 +9,16 @@ class Item extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['body', 'amount', 'template_id'];
     protected $casts = ['body' => 'array'];
+
+    //Many To Many (Polymorphic)
+    public function cards(){
+        return $this->morphToMany('App\Models\Card', 'transactionable');
+    }
+
+    public function template(){
+        return $this->belongsTo(Template::class);
+    }
 
 }

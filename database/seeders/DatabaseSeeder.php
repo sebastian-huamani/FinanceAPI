@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
         
         
-        Template::factory(100)->create();
+        Template::factory(150)->create();
 
         TypeCard::factory(1)->create([
             'name' => 'Debit'

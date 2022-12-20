@@ -21,7 +21,7 @@ class ItemFactory extends Factory
         return [
             'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],
             'amount' => $this->faker->randomFloat(2, -400, 1600),
-            'templates_id' => $this->faker->numberBetween(1, Template::count()),
+            'template_id' => $this->faker->numberBetween(1, Template::count()),
         ];
     }
 }

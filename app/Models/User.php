@@ -41,4 +41,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // One To Many
+    public function cards(){
+        return $this->hasMany(Card::class);
+    }
+
+    // One To Many
+    public function templates(){
+        return $this->hasMany(Template::class);
+    }
 }
