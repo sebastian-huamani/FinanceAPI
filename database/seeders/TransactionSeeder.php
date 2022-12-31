@@ -22,19 +22,19 @@ class TransactionSeeder extends Seeder
             $template = rand(1, 150);
             $amount = rand(-1000, 1000);
 
-            $card->items()->create(['body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
+            $card->items()->create(['title'=> 'et occaecati voluptas', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
 
             
             $template = rand(1, 150);
             $amount = rand(-1000, 1000);
 
-            $card->items()->create(['body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
+            $card->items()->create(['title'=> 'et voluptas occaecati', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
 
 
             $template = rand(1, 150);
             $amount = rand(-1000, 1000);
 
-            $card->items()->create(['body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
+            $card->items()->create(['title'=> 'voluptas occaecati et', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
         }
 
     }

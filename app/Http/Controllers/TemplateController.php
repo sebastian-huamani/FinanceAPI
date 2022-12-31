@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TemplateRequest;
 use App\Models\Template;
+use App\Models\User;
 use Carbon\Carbon;
 use DateTimeZone;
 use Exception;
@@ -21,14 +22,14 @@ class TemplateController extends Controller
                 array_push($body ,[$request->body[$i], $request->type[$i]] );
             }
 
-            $template = new Template();
-            $template->title = $request->title;
-            $template->body = $body;
-            $template->states_id = $request->states_id;
-            $template->user_id = auth()->user()->id;
-            $template->created_at = Carbon::now(new DateTimeZone('America/Lima'));
-            $template->save();  
-            
+            Template::create([
+                'title' => $request->title,
+                'body' => $body,
+                'states_id' => $request->states_id,
+                'user_id' => auth()->user()->id,
+                'created_at' => Carbon::now(new DateTimeZone('America/Lima'))
+            ]);
+
             return response()->json([
                 'res' => true,
                 'msg' => "Se Ha agregado una Nueva Plantilla",
@@ -87,22 +88,24 @@ class TemplateController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $template = Template::where('user_id',  auth()->user()->id)->where('id', $id)->first();
-
+            
             $body = [];
             for ($i=0; $i < sizeof($request->body) ; $i++) { 
                 array_push($body ,[$request->body[$i], $request->type[$i]] );
             }
-
+            $template = Template::where('user_id',  auth()->user()->id)->where('id', $id)->first();
+            
             if (!$template) {
                 throw new Exception();
             }
 
-            $template->title = $request->title;
-            $template->body = $body;
-            $template->states_id = $request->states_id;
-            $template->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
-            $template->save();
+            $template->update([
+                'title' => $request->title,
+                'body' => $body,
+                'states_id' => $request->states_id,
+                'user_id' => auth()->user()->id,
+                'created_at' => Carbon::now(new DateTimeZone('America/Lima'))
+            ]);
 
             return response()->json([
                 'res' => true,
@@ -117,9 +120,9 @@ class TemplateController extends Controller
     }
 
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $deleted = DB::table('templates')->where('id', '=', $request->id)->delete();
+        $deleted = Template::where('id', $id)->where('user_id', auth()->user()->id)->delete();
 
         $res = $deleted > 0 ? true : false;
         $msg = $deleted > 0 ? 'Se a eliminado la plantilla' : 'No existe la plantilla a eliminar';

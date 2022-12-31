@@ -54,6 +54,29 @@ class AuthController extends Controller
             $request->user()
         );
     }
+    public function updateInfoUser(Request $request)
+    {
+        try {
+            $user = User::where('id', auth()->user()->id)->first();
+    
+            $user->update([
+                'name' => $request->name,
+                'lastname' => $request->lastname,
+            ]);
+    
+            return response()->json([
+                'res' => true,
+                'msg' => 'Actualizado Tu Perfil'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => true,
+                'msg' => 'Perfil No Actualizado',
+                'e' => $e->getMessage()
+            ]);
+        }
+    }
+
 
 
     public function logout(Request $request)
@@ -69,13 +92,9 @@ class AuthController extends Controller
     public function pruebas(Request $request)
     {
         try {
-            $body = [];
-            for ($i=0; $i < sizeof($request->body) ; $i++) { 
-                array_push($body ,[$request->template[$i], $request->body[$i]] );
-            }
+           
             return response()->json([
                 'res' => $request->all(),
-                'get' => $body,
             ]);
         } catch (\Exception $e) {
             return response()->json([

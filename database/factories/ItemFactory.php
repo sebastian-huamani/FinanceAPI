@@ -19,6 +19,7 @@ class ItemFactory extends Factory
     public function definition()
     {
         return [
+            'title' => $this->faker->sentence(3),
             'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],
             'amount' => $this->faker->randomFloat(2, -400, 1600),
             'template_id' => $this->faker->numberBetween(1, Template::count()),

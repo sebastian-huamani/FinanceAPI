@@ -16,7 +16,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::delete('/transaction/count/delete/{id}', [TransactionController::class, 'destory']);
 
-    Route::put('/transaction/count/update', [TransactionController::class, 'editItemCount']);
+    Route::post('/transaction/count/update', [TransactionController::class, 'editItemCount']);
 
     Route::get('/transaction/count/showAllItemsHistory', [TransactionController::class, 'showAllItemsHistory']);
 

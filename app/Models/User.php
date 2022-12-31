@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'lastname',
         'email',
         'password',
     ];
@@ -50,5 +51,9 @@ class User extends Authenticatable
     // One To Many
     public function templates(){
         return $this->hasMany(Template::class);
+    }
+
+    public function date_card(){
+        return $this->hasOne(DateCard::class);
     }
 }

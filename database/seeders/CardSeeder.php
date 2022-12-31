@@ -27,7 +27,7 @@ class CardSeeder extends Seeder
                 'name_banck' => fake()->word(),
                 'card_expiration_date' => fake()->date('Y_m_d'),
                 'type_card_id' => 2,
-                'date_cards_id' => $dateCard->id,
+                'date_card_id' => $dateCard->id,
                 'state_id' => 1,
                 'user_id' => $dateCard->user_id,
             ]);

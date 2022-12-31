@@ -26,7 +26,7 @@ class CardFactory extends Factory
             'name_banck' => $this->faker->word(),
             'card_expiration_date' => $this->faker->date('Y_m_d'),
             'type_card_id' => 1,
-            'date_cards_id' => null,
+            'date_card_id' => null,
             'state_id' => 1,
             'user_id' => $this->faker->numberBetween(1, User::count()),
         ];
