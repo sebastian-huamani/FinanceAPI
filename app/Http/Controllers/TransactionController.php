@@ -66,7 +66,9 @@ class TransactionController extends Controller
             
             $items = $card->items()
                 ->whereYear('items.created_at', $request->year)
-                ->whereMonth('items.created_at', $request->month)->get();
+                ->whereMonth('items.created_at', $request->month)
+                ->orderby('items.created_at', 'desc')
+                ->get();
 
             return response()->json([
                 'res' => true,
@@ -81,27 +83,26 @@ class TransactionController extends Controller
         }
     }
 
-    public function showAllItemsUser()
+    public function DataDashboard()
     {
         try {
-            $items = Item::select('*')
-                ->join('transactions', 'transactions.items_id', '=', 'items.id')
-                ->join('cards', 'cards.id', '=', 'transactions.cards_id')
-                ->where('cards.user_id', auth()->user()->id)
-                ->get();
-
-            if (!$items->first()) {
-                throw new Exception();
-            }
+            $user = User::find(auth()->user()->id);
+            
+            $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
+            $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
+            $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
 
             return response()->json([
                 'res' => true,
-                'msg' => $items,
+                'creditLineTotal' => $creditLineTotal,
+                'creditAmountTotal' => $creditAmountTotal,
+                'debitTotal' => $debitTotal,
             ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
-                'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
+                'msg' => $e->getMessage(),
             ], 200);
         }
     }

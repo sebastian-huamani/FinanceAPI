@@ -9,7 +9,7 @@ class Card extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'bottom_line', 'name_banck', 'card_expiration_date', 'type_card_id', 'date_card_id', 'state_id', 'user_id', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'bottom_line', 'amount', 'name_banck', 'card_expiration_date', 'type_card_id', 'date_card_id', 'state_id', 'user_id', 'created_at', 'updated_at'];
 
     // One To Many (Inverse) / Belongs To
     public function state(){

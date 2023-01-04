@@ -8,7 +8,7 @@ use App\Http\Controllers\TransactionController;
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/transaction/count/showAllItemsCount', [TransactionController::class, 'showAllItemsCount']);
-    Route::get('/transaction/count/showAllItemsUser', [TransactionController::class, 'showAllItemsUser']);
+    Route::get('/transaction/count/DataDashboard', [TransactionController::class, 'DataDashboard']);
     Route::get('/transaction/count/showOne/{id}', [TransactionController::class, 'showOne']);
 
     Route::post('/transaction/count/createItem', [TransactionController::class, 'createItemCount']);

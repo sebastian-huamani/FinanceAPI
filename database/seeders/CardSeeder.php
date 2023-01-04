@@ -21,9 +21,12 @@ class CardSeeder extends Seeder
         
         foreach ($dateCards as $dateCard) {
 
+            $bottomLine = fake()->randomFloat(2, 1300, 1600);
+
             Card::factory(1)->create([
                 'name' => fake()->word(),
-                'bottom_line' => fake()->randomFloat(2, -400, 1600),
+                'bottom_line' => $bottomLine,
+                'amount' => $bottomLine - fake()->randomFloat(2, 200, 399),
                 'name_banck' => fake()->word(),
                 'card_expiration_date' => fake()->date('Y_m_d'),
                 'type_card_id' => 2,

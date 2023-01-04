@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('bottom_line');
+            $table->decimal('amount');
             $table->string('name_banck');
             $table->date('card_expiration_date');
             $table->foreignId('type_card_id')->constrained();
