@@ -7,6 +7,8 @@ use App\Models\Item;
 use App\Models\Template;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Database\Seeder;
 use Faker\Generator;
 use Illuminate\Support\Facades\DB;
@@ -19,22 +21,17 @@ class TransactionSeeder extends Seeder
         $cards = Card::get();
         foreach( $cards as $card){
 
-            $template = rand(1, 150);
-            $amount = rand(-1000, 1000);
+            $toDay = Carbon::now(new DateTimeZone('America/Lima'));
 
-            $card->items()->create(['title'=> 'et occaecati voluptas', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
+            for ($i=0; $i < 80; $i++) { 
 
-            
-            $template = rand(1, 150);
-            $amount = rand(-1000, 1000);
+                $template = rand(1, 150);
+                $amount = rand(-1000, 1000);
+    
+                $card->items()->create(['title'=> 'voluptas occaecati et', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template, 'created_at' => $toDay->addDays(1)]);
+            }
 
-            $card->items()->create(['title'=> 'et voluptas occaecati', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
 
-
-            $template = rand(1, 150);
-            $amount = rand(-1000, 1000);
-
-            $card->items()->create(['title'=> 'voluptas occaecati et', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template]);
         }
 
     }

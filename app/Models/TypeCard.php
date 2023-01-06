@@ -11,6 +11,6 @@ class TypeCard extends Model
 
     // One To Many
     public function cards(){
-        return $this->hasMany(Card::class);
+        return $this->belongsTo(Card::class);
     }
 }

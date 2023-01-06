@@ -31,8 +31,8 @@ class Card extends Model
         return $this->morphedByMany('App\Models\Item', 'transactionable');
     }
 
-    // One To One
+    // One To Many
     public function date_card(){
-        return $this->hasOne(DateCard::class);
+        return $this->belongsTo(DateCard::class);
     }
 }

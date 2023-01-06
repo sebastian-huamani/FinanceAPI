@@ -92,11 +92,21 @@ class TransactionController extends Controller
             $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
             $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
 
+            // $creditDebtxMonth = $user->cards()->where('cards.type_card_id', 2)->cursor()->filter(function ($card) {
+            //     // $billing_cicle = $card->date_card->billing_cycle;
+            //     // $closing_data = $card->date_card->closing_data;
+            //     return $card->items;
+            // });
+
+            $data = array(
+                'creditLineTotal' => array('Full Credit', $creditLineTotal, 132),
+                'creditAmountTotal' => array('Available Credit', $creditAmountTotal, 132),
+                'debitTotal' => array('Full Debit', $debitTotal, 132),
+            );
+
             return response()->json([
                 'res' => true,
-                'creditLineTotal' => $creditLineTotal,
-                'creditAmountTotal' => $creditAmountTotal,
-                'debitTotal' => $debitTotal,
+                'msg' => $data
             ], 200);
 
         } catch (\Exception $e) {
