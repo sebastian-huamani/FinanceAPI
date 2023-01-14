@@ -122,14 +122,19 @@ class TemplateController extends Controller
 
     public function destroy($id)
     {
-        $deleted = Template::where('id', $id)->where('user_id', auth()->user()->id)->delete();
+        try {
+            Template::where('id', $id)->where('user_id', auth()->user()->id)->delete();
 
-        $res = $deleted > 0 ? true : false;
-        $msg = $deleted > 0 ? 'Se a eliminado la plantilla' : 'No existe la plantilla a eliminar';
-
-        return response()->json([
-            'res' => $res,
-            'msg' => $msg,
-        ], 200);
+            return response()->json([
+                'res' => true,
+                'msg' => 'Se a eliminado la plantilla',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => 'La plantilla esta en Uso',
+                'e' => $e->getMessage()
+            ], 200);
+        }
     }
 }
