@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Models\DataInfoUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,20 +13,28 @@ class AuthController extends Controller
 {
     public function register(AuthRequest $request)
     {
-        $user = User::create([   
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
+        try{
+            $user = User::create([   
+                'name' => $request->name,
+                'email' => $request->email,
+                'lastname' => $request->lastname,
+                'password' => Hash::make($request->password)
+            ]);
+    
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
+                // "request" => $request->all(),
+                // "user" => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer'
+            ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            // "request" => $request->all(),
-            // "user" => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer'
-        ]);
+        } catch(\Exception $e) {
+            return response()->json([
+                'E' => $e->getMessage()
+            ]);
+        }
     }
 
     public function login(Request $request)
@@ -45,7 +54,6 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'Bearer'
         ]);
-
     }
 
     public function infoUser(Request $request )
@@ -54,6 +62,7 @@ class AuthController extends Controller
             $request->user()
         );
     }
+
     public function updateInfoUser(Request $request)
     {
         try {
@@ -89,12 +98,15 @@ class AuthController extends Controller
         ]);
     }
 
-    public function pruebas(Request $request)
+    public function pruebas()
     {
         try {
-           
+            $user = User::where('id', 4)->first();
+            
+
             return response()->json([
-                'res' => $request->all(),
+                'res' => true,
+                'msg' => $user->cards
             ]);
         } catch (\Exception $e) {
             return response()->json([

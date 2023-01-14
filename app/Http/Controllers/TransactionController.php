@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ItemRequest;
 use App\Models\Card;
+use App\Models\DataInfoUser;
 use App\Models\Item;
 use App\Models\User;
 use Carbon\Carbon;
@@ -40,7 +41,7 @@ class TransactionController extends Controller
             ]);
                 
             $card->update([
-                'bottom_line'=> $card->bottom_line + $request->amount
+                'amount'=> $card->amount + $request->amount
             ]);
 
             DB::commit();
@@ -83,30 +84,47 @@ class TransactionController extends Controller
         }
     }
 
+    public function promedio($currentMoth, $lastMonth){
+        $value = ( $currentMoth - $lastMonth) / $lastMonth;
+        return round($value * 100, 2);
+    }
+
     public function DataDashboard()
     {
         try {
+
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
             $user = User::find(auth()->user()->id);
             
             $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
             $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
             $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
+            
+            $lastDataMonth = $user->data_info_user()->whereDate('data_info_users.created_at', '<', $dateNow)->first();
 
-            // $creditDebtxMonth = $user->cards()->where('cards.type_card_id', 2)->cursor()->filter(function ($card) {
-            //     // $billing_cicle = $card->date_card->billing_cycle;
-            //     // $closing_data = $card->date_card->closing_data;
-            //     return $card->items;
-            // });
+            $full_credit =  $this->promedio($creditLineTotal, $lastDataMonth["full_credit"]); 
+            $aviable_credit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_credit"]);
+            $full_debit = $this->promedio($creditLineTotal,$lastDataMonth["full_debit"]);
+            $aviable_debit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_debit"]);
+
+
+            $dataxMonth = $user->data_info_user()
+                ->whereDate('data_info_users.created_at', '<', $dateNow)
+                ->limit(12)
+                ->orderBy('data_info_users.created_at', 'desc')
+                ->get();
+
 
             $data = array(
-                'creditLineTotal' => array('Full Credit', $creditLineTotal, 132),
-                'creditAmountTotal' => array('Available Credit', $creditAmountTotal, 132),
-                'debitTotal' => array('Full Debit', $debitTotal, 132),
+                'full_credit' => array($creditLineTotal, $full_credit),
+                'aviable_credit' => array($creditAmountTotal, $aviable_credit),
+                'full_debit' => array($debitTotal, $full_debit),
+                'dataxMonth' => $dataxMonth,
             );
 
             return response()->json([
                 'res' => true,
-                'msg' => $data
+                'msg' => $data,
             ], 200);
 
         } catch (\Exception $e) {

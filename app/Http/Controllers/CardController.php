@@ -23,7 +23,8 @@ class CardController extends Controller
 
             Card::create([
                 'name' => $request->name,
-                'bottom_line' => $request->bottom_line,
+                'bottom_line' => 0,
+                'amount' => $request->bottom_line ,
                 'name_banck' => $request->name_banck,
                 'card_expiration_date' => $request->card_expiration_date,
                 'type_card_id' => 1 ,
@@ -63,6 +64,7 @@ class CardController extends Controller
             Card::create([
                 'name' => $request->name,
                 'bottom_line' => $request->bottom_line,
+                'amount' => $request->bottom_line,
                 'name_banck' => $request->name_banck,
                 'card_expiration_date' => $request->card_expiration_date,
                 'type_card_id' => 2 ,
@@ -92,11 +94,7 @@ class CardController extends Controller
     {
         try {
             $data = DB::select('CALL SP_Show_Cards(?)', [auth()->user()->id]);
-            
-            if ( !$data ) {
-                throw new Exception();
-            }
-            
+
             return response()->json([
                 'res' => true,
                 'msg' => $data,

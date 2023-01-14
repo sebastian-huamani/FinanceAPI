@@ -56,4 +56,9 @@ class User extends Authenticatable
     public function date_card(){
         return $this->hasOne(DateCard::class);
     }
+
+    public function data_info_user(){
+        return $this->hasOne(DataInfoUser::class);
+    }
+    
 }
