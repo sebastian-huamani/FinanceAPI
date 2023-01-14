@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ItemRequest;
+use App\Http\Requests\TransactionCardsRequest;
 use App\Models\Card;
 use App\Models\DataInfoUser;
 use App\Models\Item;
@@ -49,14 +50,14 @@ class TransactionController extends Controller
             return response()->json([
                 'res' => true,
                 'msg' => "Se Ha Agregado A La Lista De Movimientos",
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'res' => false,
                 'msg' => "Se ha generado un Error",
                 'e' => $e->getMessage()
-            ]);
+            ], 200);
         }
     }
 
@@ -247,7 +248,58 @@ class TransactionController extends Controller
         }
     }
 
-    public function showAllItemsHistory(){
-        
+    public function transactionBetweenCards(TransactionCardsRequest $request){
+
+        DB::beginTransaction();
+
+        try {
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+
+            $fromCard = Card::where('id', $request->fromCard)->where('user_id', auth()->user()->id)->first();
+            $toCard = Card::where('id', $request->toCard)->where('user_id', auth()->user()->id)->first();
+
+            if($fromCard == null || $toCard == null){
+                throw new Exception();
+            }
+
+            $fromCard->items()->create([
+                'title'=> "Transaccion entre Cuentas",
+                'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
+                'amount'=> $request->amount * -1,
+                'template_id' => 1,
+                'created_at' => $dateNow
+            ]);
+
+            $toCard->items()->create([
+                'title'=> "Transaccion entre Cuentas",
+                'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
+                'amount'=> $request->amount,
+                'template_id' => 1,
+                'created_at' => $dateNow
+            ]);
+
+            $fromCard->update([
+                'amount'=> $fromCard->amount - $request->amount
+            ]);
+
+            $toCard->update([
+                'amount'=> $toCard->amount + $request->amount
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'res' => true,
+                'msg' => "Transferencia Realizada",
+            ], 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'res' => false,
+                'msg' => "Transferencia no Realizada",
+            ], 200);
+        }
     }
 }

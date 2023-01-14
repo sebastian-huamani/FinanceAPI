@@ -18,7 +18,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/transaction/count/update', [TransactionController::class, 'editItemCount']);
 
-    Route::get('/transaction/count/showAllItemsHistory', [TransactionController::class, 'showAllItemsHistory']);
+    Route::post('/transaction/count/transactionBetweenCards', [TransactionController::class, 'transactionBetweenCards']);
 
     
 });
