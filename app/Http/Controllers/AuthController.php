@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest;
 use App\Models\DataInfoUser;
 use App\Models\User;
+use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -103,10 +105,12 @@ class AuthController extends Controller
         try {
             $user = User::where('id', 4)->first();
             
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+            $lastDataMonth = $user->data_info_user()->whereDate('data_info_users.created_at', '<', $dateNow)->first();
 
             return response()->json([
                 'res' => true,
-                'msg' => $user->cards
+                'msg' => $lastDataMonth
             ]);
         } catch (\Exception $e) {
             return response()->json([

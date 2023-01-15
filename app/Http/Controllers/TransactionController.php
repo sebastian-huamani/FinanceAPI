@@ -101,12 +101,19 @@ class TransactionController extends Controller
             $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
             $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
             
+            
+            $full_credit = 0;
+            $aviable_credit = 0;
+            $full_debit = 0;
+            $aviable_debit = 0;
+            
             $lastDataMonth = $user->data_info_user()->whereDate('data_info_users.created_at', '<', $dateNow)->first();
-
-            $full_credit =  $this->promedio($creditLineTotal, $lastDataMonth["full_credit"]); 
-            $aviable_credit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_credit"]);
-            $full_debit = $this->promedio($creditLineTotal,$lastDataMonth["full_debit"]);
-            $aviable_debit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_debit"]);
+            if ($lastDataMonth != null) {
+                $full_credit =  $this->promedio($creditLineTotal, $lastDataMonth["full_credit"]); 
+                $aviable_credit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_credit"]);
+                $full_debit = $this->promedio($creditLineTotal,$lastDataMonth["full_debit"]);
+                $aviable_debit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_debit"]);
+            }
 
 
             $dataxMonth = $user->data_info_user()
