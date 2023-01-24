@@ -54,7 +54,7 @@ class CardController extends Controller
         try {
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
 
-            $user = User::find(3);
+            $user = User::where('id', auth()->user()->id)->first();
             $dateCard = $user->date_card()->create([
                 "billing_cycle" => 12,
                 "closing_date" => 7,

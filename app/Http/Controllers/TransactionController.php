@@ -97,24 +97,30 @@ class TransactionController extends Controller
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
             $user = User::find(auth()->user()->id);
             
+            $dataLandings = $user->landings()
+            ->join('states', 'landings.state_id', '=', 'states.id')
+            ->where('landings.state_id', 1)
+            ->get();
+
+            $totalLendings = round($dataLandings->sum("amount"), 2);
             $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
             $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
             $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
+            $debitAmountTotal = round($debitTotal, 2) - round($totalLendings, 2);
             
-            
-            $full_credit = 0;
-            $aviable_credit = 0;
-            $full_debit = 0;
-            $aviable_debit = 0;
+            $fullCreditPorcent = 0;
+            $aviableCreditPorcent = 0;
+            $fullDebitPorcent = 0;
+            $aviableDebitPorcent = 0;
             
             $lastDataMonth = $user->data_info_user()->whereDate('data_info_users.created_at', '<', $dateNow)->first();
-            if ($lastDataMonth != null) {
-                $full_credit =  $this->promedio($creditLineTotal, $lastDataMonth["full_credit"]); 
-                $aviable_credit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_credit"]);
-                $full_debit = $this->promedio($creditLineTotal,$lastDataMonth["full_debit"]);
-                $aviable_debit = $this->promedio($creditLineTotal,$lastDataMonth["aviable_debit"]);
-            }
 
+            if ($lastDataMonth != null) {
+                $fullCreditPorcent =  $this->promedio($creditLineTotal, $lastDataMonth["full_credit"]); 
+                $aviableCreditPorcent = $this->promedio($creditAmountTotal,$lastDataMonth["aviable_credit"]);
+                $fullDebitPorcent = $this->promedio($debitTotal,$lastDataMonth["full_debit"]);
+                $aviableDebitPorcent = $this->promedio($debitAmountTotal,$lastDataMonth["aviable_debit"]);
+            }
 
             $dataxMonth = $user->data_info_user()
                 ->whereDate('data_info_users.created_at', '<', $dateNow)
@@ -122,11 +128,13 @@ class TransactionController extends Controller
                 ->orderBy('data_info_users.created_at', 'desc')
                 ->get();
 
-
             $data = array(
-                'full_credit' => array($creditLineTotal, $full_credit),
-                'aviable_credit' => array($creditAmountTotal, $aviable_credit),
-                'full_debit' => array($debitTotal, $full_debit),
+                'full_credit' => array($creditLineTotal, $fullCreditPorcent),
+                'aviable_credit' => array($creditAmountTotal, $aviableCreditPorcent),
+                'full_debit' => array($debitTotal, $fullDebitPorcent),
+                'aviable_debit' => array( round($debitAmountTotal, 2), $aviableDebitPorcent),
+                'full_lending' => array($totalLendings, 0),
+                'dataLending' => $dataLandings,
                 'dataxMonth' => $dataxMonth,
             );
 

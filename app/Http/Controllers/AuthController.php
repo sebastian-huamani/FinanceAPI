@@ -100,17 +100,12 @@ class AuthController extends Controller
         ]);
     }
 
-    public function pruebas()
+    public function pruebas(Request $request)
     {
         try {
-            $user = User::where('id', 4)->first();
-            
-            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            $lastDataMonth = $user->data_info_user()->whereDate('data_info_users.created_at', '<', $dateNow)->first();
-
             return response()->json([
                 'res' => true,
-                'msg' => $lastDataMonth
+                'msg' => $request->all()
             ]);
         } catch (\Exception $e) {
             return response()->json([

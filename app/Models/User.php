@@ -53,6 +53,10 @@ class User extends Authenticatable
         return $this->hasMany(Template::class);
     }
 
+    public function landings(){
+        return $this->hasMany(Landing::class);
+    }
+
     public function date_card(){
         return $this->hasOne(DateCard::class);
     }

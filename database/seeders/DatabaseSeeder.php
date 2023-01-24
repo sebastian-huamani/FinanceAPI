@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\DataInfoUser;
+use App\Models\Landing;
 use App\Models\State;
 use App\Models\Template;
 use App\Models\TypeCard;
@@ -56,11 +57,11 @@ class DatabaseSeeder extends Seeder
             'name' => 'Credit'
         ]);
 
-
-        // DataInfoUser::factory(3)->create();
-
         $this->call(CardSeeder::class);
-
+        
+        Landing::factory(60)->create();
+        
         $this->call(TransactionSeeder::class);
+
     }
 }
