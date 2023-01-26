@@ -115,5 +115,11 @@ class AuthController extends Controller
         }
     }
 
+    public function unauthorized(Request $request){
+        return response()->json([
+            "Mensaje"=>"No autorizado, No se proporcionó Token o es invalido"
+        ],401);
+    }
+
     
 }
