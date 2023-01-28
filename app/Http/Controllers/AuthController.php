@@ -26,16 +26,16 @@ class AuthController extends Controller
             $token = $user->createToken('auth_token')->plainTextToken;
     
             return response()->json([
-                // "request" => $request->all(),
-                // "user" => $user,
+                'res' => true,
                 'access_token' => $token,
                 'token_type' => 'Bearer'
-            ]);
+            ], 200);
 
         } catch(\Exception $e) {
             return response()->json([
-                'E' => $e->getMessage()
-            ]);
+                'res' => false,
+                'e' => $e->getMessage()
+            ], 200);
         }
     }
 
