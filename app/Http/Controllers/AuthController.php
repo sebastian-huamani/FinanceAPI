@@ -100,7 +100,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function pruebas(Request $request)
+    public function pruebas()
     {
         try {
             return response()->json([
