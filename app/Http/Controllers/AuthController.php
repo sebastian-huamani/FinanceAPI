@@ -105,7 +105,7 @@ class AuthController extends Controller
         try {
             return response()->json([
                 'res' => true,
-                'msg' => $request->all()
+                'msg' => User::get()
             ]);
         } catch (\Exception $e) {
             return response()->json([
