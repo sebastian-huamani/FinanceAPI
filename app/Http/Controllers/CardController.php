@@ -93,7 +93,11 @@ class CardController extends Controller
     public function showAll()
     {
         try {
-            $data = DB::select('CALL SP_Show_Cards(?)', [auth()->user()->id]);
+            $data = Card::where('user_id', auth()->user()->id)
+                ->where('state_id', 1)
+                ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
+                ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'type_cards.name as type_card')
+                ->get();
 
             return response()->json([
                 'res' => true,
