@@ -115,10 +115,10 @@ class CardController extends Controller
     public function dataCardDebit($id_card)
     {
         $debitCard = Card::where('cards.id',  $id_card)
-                ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
-                ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at')
-                ->where('cards.user_id', auth()->user()->id)
-                ->get();
+            ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
+            ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at')
+            ->where('cards.user_id', auth()->user()->id)
+            ->first();
 
         return $debitCard;
     }
@@ -126,11 +126,11 @@ class CardController extends Controller
     public function dataCardCrebit($id_card)
     {
         $debitCard = Card::where('cards.id',  $id_card)
-                ->leftJoin('date_cards', 'cards.date_card_id', '=', 'date_cards.id')
-                ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
-                ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
-                ->where('cards.user_id', auth()->user()->id)
-                ->get();
+            ->leftJoin('date_cards', 'cards.date_card_id', '=', 'date_cards.id')
+            ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
+            ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
+            ->where('cards.user_id', auth()->user()->id)
+            ->first();
 
         return $debitCard;
     }
@@ -152,7 +152,7 @@ class CardController extends Controller
 
             return response()->json([
                 'res' => true,
-                'e' => $infoCard
+                'msg' => $infoCard
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
