@@ -24,15 +24,15 @@ class CardController extends Controller
             Card::create([
                 'name' => $request->name,
                 'bottom_line' => 0,
-                'amount' => $request->bottom_line ,
+                'amount' => $request->bottom_line,
                 'name_banck' => $request->name_banck,
                 'card_expiration_date' => $request->card_expiration_date,
-                'type_card_id' => 1 ,
+                'type_card_id' => 1,
                 'date_cards_id' => null,
-                'state_id' => 1 ,
+                'state_id' => 1,
                 'user_id' => auth()->user()->id,
                 'created_at' => $dateNow,
-                'updated_at' => $dateNow,   
+                'updated_at' => $dateNow,
             ]);
 
             return response()->json([
@@ -67,12 +67,12 @@ class CardController extends Controller
                 'amount' => $request->bottom_line,
                 'name_banck' => $request->name_banck,
                 'card_expiration_date' => $request->card_expiration_date,
-                'type_card_id' => 2 ,
+                'type_card_id' => 2,
                 'date_card_id' => $dateCard->id,
-                'state_id' => 1 ,
+                'state_id' => 1,
                 'user_id' => auth()->user()->id,
                 'created_at' => $dateNow,
-                'updated_at' => $dateNow,   
+                'updated_at' => $dateNow,
             ]);
 
             DB::commit();
@@ -112,28 +112,54 @@ class CardController extends Controller
         }
     }
 
+    public function dataCardDebit($id_card)
+    {
+        $debitCard = Card::where('cards.id',  $id_card)
+                ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
+                ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at')
+                ->where('cards.user_id', auth()->user()->id)
+                ->get();
+
+        return $debitCard;
+    }
+
+    public function dataCardCrebit($id_card)
+    {
+        $debitCard = Card::where('cards.id',  $id_card)
+                ->leftJoin('date_cards', 'cards.date_card_id', '=', 'date_cards.id')
+                ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
+                ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
+                ->where('cards.user_id', auth()->user()->id)
+                ->get();
+
+        return $debitCard;
+    }
+
     public function showOne(Request $request)
     {
         try {
-            $data = DB::select('CALL SP_ShowData_Cards(?, ?)', [$request->id, auth()->user()->id]);
-            
-            if ( !$data ) {
-                throw new Exception();
+            $infoCard = 0;
+            $data = Card::select('type_card_id')
+                ->where('id', $request->id)
+                ->first();
+
+
+            if ($data->type_card_id == 1) {
+                $infoCard = $this->dataCardDebit($request->id);
+            } else {
+                $infoCard = $this->dataCardCrebit($request->id);
             }
 
             return response()->json([
                 'res' => true,
-                'msg' => $data[0]
+                'e' => $infoCard
             ], 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Informacion No Encontrada",
-                'e' => $e->getMessage()
             ], 200);
         }
-
     }
 
     public function update(Request $request, $id)
@@ -142,10 +168,10 @@ class CardController extends Controller
             $dateCard = null;
             $card = Card::where('user_id', '=', auth()->user()->id)->where('id', '=', $id)->first();
 
-            if( !$card ){
+            if (!$card) {
                 throw new Exception();
             }
-            
+
             $card->name = $request->name;
             $card->bottom_line = $request->bottom_line;
             $card->name_banck = $request->name_banck;
@@ -160,12 +186,11 @@ class CardController extends Controller
                 $dateCard->payment_due_date = $request->payment_due_date;
                 $dateCard->save();
             }
-            
+
             return response()->json([
                 'res' => true,
                 'msg' => "Has Actualizado La Cuenta",
             ], 200);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
@@ -182,7 +207,7 @@ class CardController extends Controller
             $card->update([
                 'state_id' => 2
             ]);
-    
+
             return response()->json([
                 'res' => "true",
                 'msg' => 'Se a eliminado la Cuenta Con Exito',
@@ -209,6 +234,4 @@ class CardController extends Controller
             'msg' => $msg,
         ], 200);
     }
-
-    
 }
