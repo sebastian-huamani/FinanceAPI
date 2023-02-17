@@ -110,17 +110,14 @@ class LandingController extends Controller
     public function edit(Request $request)
     {
         try {
-            // $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
             $lending = Landing::where('user_id', auth()->user()->id)->where('id', $request->id)->first();
-
-            // $postpone = $lending->postpone;
-            // array_push($postpone, [$dateNow, $request->amount, $request->payment_date]);
 
             $lending->update([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
                 'payment_date' => $request->payment_date,
-                // 'postpone' => $postpone,
+                'created_date' => $request->created_date,
+                'observation' => $request->observation
             ]);
             return response()->json([
                 'res' => true,
