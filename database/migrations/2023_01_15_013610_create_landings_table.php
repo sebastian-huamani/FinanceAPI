@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('state_id')->constrained();
             $table->longText('postpone')->nullable();
+            $table->longText('observation')->nullable();
             $table->timestamps();
         });
     }
