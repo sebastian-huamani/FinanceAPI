@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('landings', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount');
+            $table->timestamp('created_payment_date');
             $table->timestamp('payment_date');
             $table->string('debtor');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('state_id')->constrained();
             $table->longText('postpone')->nullable();
-            $table->longText('observation')->nullable();
             $table->timestamps();
         });
     }

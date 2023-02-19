@@ -13,14 +13,17 @@ class LandingController extends Controller
 {
     public function create(Request $request){
         try {
-            
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
             $user = User::where('id', auth()->user()->id)->first();
 
             $user->landings()->create([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
+                'created_payment_date' => $request->created_payment_date,
                 'payment_date' => $request->payment_date,
-                'state_id' => 1
+                'state_id' => 1,
+                'created_at' => $dateNow,
+                'updated_at' => $dateNow
             ]);
 
             return response()->json([
@@ -42,7 +45,7 @@ class LandingController extends Controller
             $lendings = Landing::where('user_id', auth()->user()->id)
             ->join('states', 'landings.state_id', '=', 'states.id')
             ->where('state_id', 1)
-            ->select('landings.id', 'landings.amount', 'landings.payment_date', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at', 'landings.postpone')
+            ->select('landings.id', 'landings.amount', 'landings.created_payment_date', 'landings.payment_date', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at')
             ->get();
 
             if (sizeof($lendings) == 0) {
@@ -70,7 +73,7 @@ class LandingController extends Controller
             ->where('state_id', 2)
             ->whereYear('landings.created_at', $request->year)
             ->whereMonth('landings.created_at', $request->month)
-            ->select('landings.id', 'landings.amount', 'landings.payment_date', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at', 'landings.postpone')
+            ->select('landings.id', 'landings.amount','landings.created_payment_date' ,'landings.payment_date', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at' )
             ->get();
 
             if (sizeof($lendings) == 0) {
@@ -115,9 +118,8 @@ class LandingController extends Controller
             $lending->update([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
+                'created_payment_date' => $request->created_payment_date,
                 'payment_date' => $request->payment_date,
-                'created_date' => $request->created_date,
-                'observation' => $request->observation
             ]);
             return response()->json([
                 'res' => true,
