@@ -32,7 +32,8 @@ class LandingFactory extends Factory
 
         return [
             'amount' => $amount,
-            'payment_date' => fake()->dateTimeBetween('now', '+12 week'),
+            'created_date_lending' => fake()->dateTimeBetween('-12 week', 'now'),
+            'payment_date_lending' => fake()->dateTimeBetween('now', '+12 week'),
             'debtor' => fake()->userName(),
             'user_id' => fake()->numberBetween(1, User::count()),
             'state_id' => fake()->randomElement([1, 2]),

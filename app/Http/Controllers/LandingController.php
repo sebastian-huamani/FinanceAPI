@@ -19,8 +19,8 @@ class LandingController extends Controller
             $user->landings()->create([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
-                'created_payment_date' => $request->created_payment_date,
-                'payment_date' => $request->payment_date,
+                'created_date_lending' => $request->created_date_lending,
+                'payment_date_lending' => $request->payment_date_lending,
                 'state_id' => 1,
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow
@@ -45,7 +45,7 @@ class LandingController extends Controller
             $lendings = Landing::where('user_id', auth()->user()->id)
             ->join('states', 'landings.state_id', '=', 'states.id')
             ->where('state_id', 1)
-            ->select('landings.id', 'landings.amount', 'landings.created_payment_date', 'landings.payment_date', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at')
+            ->select('landings.id', 'landings.amount', 'landings.created_date_lending', 'landings.payment_date_lending', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at')
             ->get();
 
             if (sizeof($lendings) == 0) {
@@ -73,7 +73,7 @@ class LandingController extends Controller
             ->where('state_id', 2)
             ->whereYear('landings.created_at', $request->year)
             ->whereMonth('landings.created_at', $request->month)
-            ->select('landings.id', 'landings.amount','landings.created_payment_date' ,'landings.payment_date', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at' )
+            ->select('landings.id', 'landings.amount','landings.created_date_lending' ,'landings.payment_date_lending', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at' )
             ->get();
 
             if (sizeof($lendings) == 0) {
@@ -118,8 +118,8 @@ class LandingController extends Controller
             $lending->update([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
-                'created_payment_date' => $request->created_payment_date,
-                'payment_date' => $request->payment_date,
+                'created_date_lending' => $request->created_date_lending,
+                'payment_date_lending' => $request->payment_date_lending,
             ]);
             return response()->json([
                 'res' => true,
