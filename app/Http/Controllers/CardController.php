@@ -174,6 +174,7 @@ class CardController extends Controller
 
             $card->name = $request->name;
             $card->bottom_line = $request->bottom_line;
+            $card->amount = $request->amount;
             $card->name_banck = $request->name_banck;
             $card->card_expiration_date = $request->card_expiration_date;
             $card->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
