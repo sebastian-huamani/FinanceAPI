@@ -107,12 +107,12 @@ class AuthController extends Controller
         ]);
     }
 
-    public function pruebas()
+    public function pruebas(Request $request)
     {
         try {
             return response()->json([
                 'res' => true,
-                'msg' => User::get()
+                'msg' => $request->all()
             ]);
         } catch (\Exception $e) {
             return response()->json([
