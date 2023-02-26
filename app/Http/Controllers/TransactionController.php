@@ -28,7 +28,7 @@ class TransactionController extends Controller
 
             $body = [];
             for ($i=0; $i < sizeof($request->body) ; $i++) { 
-                array_push($body ,[$request->template[$i], $request->body[$i]] );
+                array_push($body ,[$request->template[$i], $request->body[$i], $request->type[$i]] );
             }
 
             $card = Card::where('id', $request->cards_id)->where('user_id', auth()->user()->id)->first();
@@ -216,7 +216,6 @@ class TransactionController extends Controller
             return response()->json([
                 'res' => true,
                 'msg' => "Cuenta Actualizada Con Exito",
-                'item_data' => [ $item->amount, $card->bottom_line, $lastAmount, $request->amount, $newBottomLine ]
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
