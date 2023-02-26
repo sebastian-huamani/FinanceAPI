@@ -200,7 +200,7 @@ class TransactionController extends Controller
                 ->first();
 
             $lastAmount = $item->amount;
-            $newBottomLine = (floatval($card->bottom_line) - floatval($lastAmount)) + floatval($request->amount);
+            $newBottomLine = (floatval($card->amount) - floatval($lastAmount)) + floatval($request->amount);
 
             $item->update([
                 'body' => $body,
@@ -209,13 +209,14 @@ class TransactionController extends Controller
             ]);
 
             $card->update([
-                'bottom_line' => $newBottomLine
+                'amount' => $newBottomLine
             ]);
 
             DB::commit();
             return response()->json([
                 'res' => true,
                 'msg' => "Cuenta Actualizada Con Exito",
+                'item_data' => [ $item->amount, $card->bottom_line, $lastAmount, $request->amount, $newBottomLine ]
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
