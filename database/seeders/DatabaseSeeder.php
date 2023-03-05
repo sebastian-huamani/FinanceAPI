@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $users = User::factory(3)->create();
+        $users = User::factory(1)->create();
 
         State::factory(1)->create([
             'name' => 'Activo'
@@ -33,35 +33,36 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        Template::factory(150)->create();
+        // Template::factory(150)->create();
 
         TypeCard::factory(1)->create([
             'name' => 'Debit'
         ]);
-
-        foreach ($users as $user) {
-            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            for ($i=0; $i < 20; $i++) { 
-                $user->data_info_user()->create([
-                    'full_credit' => fake()->randomFloat(2, 1456, 4251),
-                    'aviable_credit' => fake()->randomFloat(2, 1456, 4251),
-                    'full_debit' => fake()->randomFloat(2, 1456, 4251),
-                    'aviable_debit' => fake()->randomFloat(2, 1456, 4251),
-                    'user_id' => $user->id,
-                    'created_at' => $dateNow->subMonth()
-                ]);
-            }
-        }
-
+        
         TypeCard::factory(1)->create([
             'name' => 'Credit'
         ]);
 
-        $this->call(CardSeeder::class);
+        // foreach ($users as $user) {
+        //     $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+        //     for ($i=0; $i < 20; $i++) { 
+        //         $user->data_info_user()->create([
+        //             'full_credit' => fake()->randomFloat(2, 1456, 4251),
+        //             'aviable_credit' => fake()->randomFloat(2, 1456, 4251),
+        //             'full_debit' => fake()->randomFloat(2, 1456, 4251),
+        //             'aviable_debit' => fake()->randomFloat(2, 1456, 4251),
+        //             'user_id' => $user->id,
+        //             'created_at' => $dateNow->subMonth()
+        //         ]);
+        //     }
+        // }
+
+
+        // $this->call(CardSeeder::class);
         
-        Landing::factory(60)->create();
+        // Landing::factory(60)->create();
         
-        $this->call(TransactionSeeder::class);
+        // $this->call(TransactionSeeder::class);
 
     }
 }

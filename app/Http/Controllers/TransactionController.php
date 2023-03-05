@@ -38,7 +38,7 @@ class TransactionController extends Controller
                 'body' => $body,
                 'amount'=> $request->amount,
                 'template_id' => $request->template_id,
-                'created_at' => $dateNow
+                'created_at' => $request->register_Item
             ]);
                 
             $card->update([
