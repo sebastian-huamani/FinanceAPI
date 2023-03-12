@@ -173,14 +173,14 @@ class CardController extends Controller
             }
 
             $card->name = $request->name;
-            $card->bottom_line = $request->bottom_line;
             $card->amount = $request->amount;
             $card->name_banck = $request->name_banck;
             $card->card_expiration_date = $request->card_expiration_date;
             $card->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
             $card->save();
-
+            
             if ($card->date_cards_id != null) {
+                $card->bottom_line = $request->bottom_line;
                 $dateCard = DateCard::where('id', $card->date_card_id)->first();
                 $dateCard->billing_cycle = $request->billing_cycle;
                 $dateCard->closing_date = $request->closing_date;
@@ -196,6 +196,7 @@ class CardController extends Controller
             return response()->json([
                 'res' => false,
                 'msg' => "Se Ha Producido Un Error, Cuenta No Actualizada",
+                'e' => $e->getMessage()
             ], 200);
         }
     }
