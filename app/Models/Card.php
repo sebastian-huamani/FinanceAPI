@@ -9,7 +9,7 @@ class Card extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'bottom_line', 'amount', 'name_banck', 'card_expiration_date', 'type_card_id', 'date_card_id', 'state_id', 'user_id', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'bottom_line', 'amount', 'name_banck', 'card_expiration_date', 'type_card_id', 'date_card_id', 'state_id', 'user_id', 'created_at', 'updated_at', 'color_id'];
 
     // One To Many (Inverse) / Belongs To
     public function state(){
@@ -34,5 +34,10 @@ class Card extends Model
     // One To Many
     public function date_card(){
         return $this->belongsTo(DateCard::class);
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Card::class);
     }
 }
