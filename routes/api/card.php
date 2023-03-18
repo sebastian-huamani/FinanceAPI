@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
-
+use App\Http\Controllers\ColorController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
@@ -18,4 +18,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/card/UpdateState/{id}', [CardController::class, 'UpdateState']);
     Route::delete('/card/delete/{id}', [CardController::class, 'destroy']);
     
+    Route::get('/colors', [ColorController::class, 'showAll']);
 });

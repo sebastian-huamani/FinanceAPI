@@ -44,9 +44,22 @@ class ColorController extends Controller
      * @param  \App\Models\Color  $color
      * @return \Illuminate\Http\Response
      */
-    public function show(Color $color)
+    public function showAll()
     {
-        //
+        $colors = Color::all();
+
+        try {
+            return response()->json([
+                'res' => true,
+                'colors' => $colors
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage()
+            ]);
+        }
+
     }
 
     /**

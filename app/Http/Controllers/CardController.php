@@ -176,6 +176,7 @@ class CardController extends Controller
             $card->amount = $request->amount;
             $card->name_banck = $request->name_banck;
             $card->card_expiration_date = $request->card_expiration_date;
+            $card->color_id = $request->color;
             $card->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
             $card->save();
             
