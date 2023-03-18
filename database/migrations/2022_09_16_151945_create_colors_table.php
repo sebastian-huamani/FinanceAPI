@@ -16,7 +16,10 @@ return new class extends Migration
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('color');
-            $table->string('code');
+            $table->string('color_panel_top');
+            $table->string('color_panel_bottom');
+            $table->string('color_type');
+            $table->string('color_button');
             $table->timestamps();
         });
     }

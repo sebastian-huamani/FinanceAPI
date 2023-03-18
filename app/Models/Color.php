@@ -9,7 +9,7 @@ class Color extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['color', 'code'];
+        protected $fillable = ['color', 'color_panel_top', 'color_panel_bottom', 'color_type', 'color_button'];
 
     
 }
