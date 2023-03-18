@@ -31,6 +31,7 @@ class CardController extends Controller
                 'date_cards_id' => null,
                 'state_id' => 1,
                 'user_id' => auth()->user()->id,
+                'color_id' => 1,
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow,
             ]);
@@ -71,6 +72,7 @@ class CardController extends Controller
                 'date_card_id' => $dateCard->id,
                 'state_id' => 1,
                 'user_id' => auth()->user()->id,
+                'color_id' => 1,
                 'created_at' => $dateNow,
                 'updated_at' => $dateNow,
             ]);
@@ -96,7 +98,8 @@ class CardController extends Controller
             $data = Card::where('user_id', auth()->user()->id)
                 ->where('state_id', 1)
                 ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
-                ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'type_cards.name as type_card')
+                ->join('colors', 'cards.color_id', '=', 'colors.id')
+                ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'type_cards.name as type_card', 'colors.code')
                 ->get();
 
             return response()->json([
@@ -116,7 +119,8 @@ class CardController extends Controller
     {
         $debitCard = Card::where('cards.id',  $id_card)
             ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
-            ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at')
+            ->join('colors', 'cards.color_id', '=', 'colors.id')
+            ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'colors.code')
             ->where('cards.user_id', auth()->user()->id)
             ->first();
 
@@ -128,7 +132,8 @@ class CardController extends Controller
         $debitCard = Card::where('cards.id',  $id_card)
             ->leftJoin('date_cards', 'cards.date_card_id', '=', 'date_cards.id')
             ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
-            ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
+            ->join('colors', 'cards.color_id', '=', 'colors.id')
+            ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'colors.code', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
             ->where('cards.user_id', auth()->user()->id)
             ->first();
 
