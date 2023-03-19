@@ -120,7 +120,7 @@ class CardController extends Controller
         $debitCard = Card::where('cards.id',  $id_card)
             ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
             ->join('colors', 'cards.color_id', '=', 'colors.id')
-            ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'colors.color_panel_top', 'colors.color_panel_bottom', 'colors.color_type', 'colors.color_button')
+            ->select('cards.id', 'cards.name', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'colors.id as color_id' , 'colors.color_panel_top', 'colors.color_panel_bottom', 'colors.color_type', 'colors.color_button')
             ->where('cards.user_id', auth()->user()->id)
             ->first();
 
@@ -133,7 +133,7 @@ class CardController extends Controller
             ->leftJoin('date_cards', 'cards.date_card_id', '=', 'date_cards.id')
             ->join('type_cards', 'cards.type_card_id', '=', 'type_cards.id')
             ->join('colors', 'cards.color_id', '=', 'colors.id')
-            ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'colors.color_panel_top', 'colors.color_panel_bottom', 'colors.color_type', 'colors.color_button', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
+            ->select('cards.id', 'cards.name', 'cards.bottom_line', 'cards.amount', 'cards.name_banck', 'cards.card_expiration_date', 'type_cards.name as type_card', 'cards.created_at', 'cards.updated_at', 'colors.id as color_id' , 'colors.color_panel_top', 'colors.color_panel_bottom', 'colors.color_type', 'colors.color_button', 'date_cards.user_id', 'date_cards.billing_cycle', 'date_cards.closing_date', 'date_cards.payment_due_date')
             ->where('cards.user_id', auth()->user()->id)
             ->first();
 

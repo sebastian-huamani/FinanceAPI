@@ -75,7 +75,7 @@ class AuthController extends Controller
     public function updateInfoUser(Request $request)
     {
         try {
-            $user = User::where('id', auth()->user()->id)->first();
+            $user = User::where('id',auth()->user()->id )->first();
 
             $user->update([
                 'name' => $request->name,
@@ -109,10 +109,32 @@ class AuthController extends Controller
 
     public function pruebas(Request $request)
     {
+        $user = User::find(auth()->user()->id);
+
+        $dataLandings = $user->landings()
+            ->join('states', 'landings.state_id', '=', 'states.id')
+            ->where('landings.state_id', 1)
+            ->get();
+
+
+        $totalLendings = round($dataLandings->sum("amount"), 2);
+        $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
+        $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
+        $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
+        $debitAmountTotal = round($debitTotal, 2) - round($totalLendings, 2);
+
+        $data = array(
+            'full_credit' => $creditLineTotal,
+            'aviable_credit' => $creditAmountTotal,
+            'full_debit' => $debitTotal,
+            'aviable_debit' => $debitAmountTotal,
+        );
+
         try {
             return response()->json([
                 'res' => true,
-                'msg' => $request->all()
+                'msg' => $request->all(),
+                'data' => $data
             ]);
         } catch (\Exception $e) {
             return response()->json([
