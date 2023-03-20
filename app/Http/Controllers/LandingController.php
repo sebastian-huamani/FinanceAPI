@@ -146,6 +146,7 @@ class LandingController extends Controller
         try {
             $lending = Landing::where('user_id', auth()->user()->id)->where('id', $request->id)->first();
             $card = Card::where('id', $lending->card_id)->first();
+            $lendingLastAmount = $lending->amount;
             
             if($request->amount > $card->amount) {
                 DB::commit();
@@ -155,12 +156,16 @@ class LandingController extends Controller
                     'lending' => $lending
                 ], 200);
             }
-
+            
             $lending->update([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
                 'created_date_lending' => $request->created_date_lending,
                 'payment_date_lending' => $request->payment_date_lending,
+            ]);
+            
+            $card->update([
+                'amount' => ($card->amount + $lendingLastAmount) - $request->amount
             ]);
             
             DB::commit();
