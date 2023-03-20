@@ -9,7 +9,7 @@ class Landing extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['amount', 'created_date_lending', 'payment_date_lending', 'user_id', 'state_id', 'debtor', 'postpone', 'created_at', 'updated_at'];
+    protected $fillable = ['amount', 'created_date_lending', 'payment_date_lending', 'user_id', 'state_id', 'debtor', 'postpone', 'card_id', 'type_lending' ,'created_at', 'updated_at'];
     protected $casts = [ 'postpone' => 'array' ];
 
     public function cards(){
