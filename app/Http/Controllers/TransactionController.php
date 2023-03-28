@@ -16,7 +16,31 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
+    public function deleteItemsOfCard(Request $request)
+    {
+        try {
+            if (auth()->user()->id != 2) {
+                throw new Exception();
+            }
 
+            $card = Card::where('id', $request->id)->first();
+            
+            $card->items->each(function(Item $item){
+                $item->delete();
+            });
+
+            $card->items()->detach();
+    
+            return response()->json([
+                'card' => $card
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => $e->getMessage(),
+                'msg' => 'no tienes permisos para hacer esta accion'
+            ], 404);
+        }
+    }
 
     public function createItemCount(ItemRequest $request)
     {

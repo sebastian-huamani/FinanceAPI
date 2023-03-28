@@ -20,5 +20,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/transaction/count/transactionBetweenCards', [TransactionController::class, 'transactionBetweenCards']);
 
-    
+    Route::post('/items/deleteAll', [TransactionController::class, 'deleteItemsOfCard']);
 });
