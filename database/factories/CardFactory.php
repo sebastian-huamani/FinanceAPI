@@ -21,7 +21,8 @@ class CardFactory extends Factory
             'type_card_id' => 1,
             'date_card_id' => null,
             'state_id' => 1,
-            'user_id' => $this->faker->numberBetween(1, User::count()),
+            'user_id' => 1,
+            'color_id' => 1
         ];
     }
 }

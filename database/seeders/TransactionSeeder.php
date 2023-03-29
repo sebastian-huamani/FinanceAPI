@@ -13,22 +13,21 @@ class TransactionSeeder extends Seeder
 {
     public function run()
     {
-        
-        $cards = Card::get();
-        foreach( $cards as $card){
-
+        $cards = Card::where('user_id', 1)->get();
+        foreach ($cards as $card) {
             $toDay = Carbon::now(new DateTimeZone('America/Lima'));
 
-            for ($i=0; $i < 80; $i++) { 
+            for ($i = 0; $i < 80; $i++) {
+                $amount = rand(-100000, 100000) / 100;
 
-                $template = rand(1, 150);
-                $amount = rand(-100000, 100000 ) / 100;
-    
-                $card->items()->create(['title'=> 'voluptas occaecati et', 'body' => [["name","canela"], ["test","135.99"], ["count","as"], ["col3", "cat"]],'amount'=> $amount ,'template_id' => $template, 'created_at' => $toDay->addDays(1)]);
+                $card->items()->create([
+                    'title' => 'voluptas occaecati et',
+                    'body' => [["restaurant","The kilo G","text"]],
+                    'amount' => $amount,
+                    'template_id' => 2,
+                    'created_at' => $toDay->subDays(1),
+                ]);
             }
-
-
         }
-
     }
 }

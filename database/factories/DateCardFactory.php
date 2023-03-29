@@ -26,7 +26,7 @@ class DateCardFactory extends Factory
             'billing_cycle' =>  $billing_cycle,
             'closing_date' => $closing_date,
             'payment_due_date' => $payment_due_date,
-            'user_id' => $this->faker->numberBetween(1, User::count()),
+            'user_id' => 1,
         ];
     }
 }

@@ -17,7 +17,7 @@ class CardSeeder extends Seeder
    
     public function run()
     {
-        $dateCards =  DateCard::factory(15)->create();
+        $dateCards =  DateCard::factory(1)->create();
         
         foreach ($dateCards as $dateCard) {
 
@@ -33,9 +33,10 @@ class CardSeeder extends Seeder
                 'date_card_id' => $dateCard->id,
                 'state_id' => 1,
                 'user_id' => $dateCard->user_id,
+                'color_id' => fake()->randomFloat(1, 8),
             ]);
         }
 
-        Card::factory(15)->create();
+        Card::factory(2)->create();
     }
 }
