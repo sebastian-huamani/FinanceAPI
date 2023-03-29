@@ -12,6 +12,7 @@ Route::post('/register', [ AuthController::class, 'register']);
 Route::post('/login', [ AuthController::class, 'login']);
 Route::get('unauthorized',[AuthController::class, 'unauthorized'])->name('api.unauthorized');
 Route::post('/logout', [ AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/data_info_users', [ AuthController::class, 'data_info_users'])->middleware('auth:sanctum');
 Route::get('/pruebas', [ AuthController::class, 'pruebas']);
 
 Route::get('/verifyemail', function() {

@@ -107,7 +107,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function pruebas(Request $request)
+    public function data_info_users()
     {
         $user = User::find(auth()->user()->id);
 
@@ -128,12 +128,12 @@ class AuthController extends Controller
             'aviable_credit' => $creditAmountTotal,
             'full_debit' => $debitTotal,
             'aviable_debit' => $debitAmountTotal,
+            'user' => $user->id
         );
 
         try {
             return response()->json([
                 'res' => true,
-                'msg' => $request->all(),
                 'data' => $data
             ]);
         } catch (\Exception $e) {

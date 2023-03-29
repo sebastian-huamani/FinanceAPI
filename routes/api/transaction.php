@@ -12,7 +12,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/transaction/count/showOne/{id}', [TransactionController::class, 'showOne']);
 
     Route::post('/transaction/count/createItem', [TransactionController::class, 'createItemCount']);
-    Route::post('/transaction/count/createItem', [TransactionController::class, 'createItemCount']);
 
     Route::delete('/transaction/count/delete/{id}', [TransactionController::class, 'destory']);
 
