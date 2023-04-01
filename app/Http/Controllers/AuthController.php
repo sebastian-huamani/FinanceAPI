@@ -109,6 +109,7 @@ class AuthController extends Controller
 
     public function data_info_users()
     {
+        $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
         $user = User::find(auth()->user()->id);
 
         $dataLandings = $user->landings()
@@ -118,11 +119,12 @@ class AuthController extends Controller
 
 
         $totalLendings = round($dataLandings->sum("amount"), 2);
-        $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
-        $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
-        $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
+        $creditLineTotal = round($user->cards()->where('cards.type_card_id', 2)->sum("bottom_line"), 2);
+        $creditAmountTotal = round($user->cards()->where('cards.type_card_id', 2)->sum("amount"), 2);
+        $debitTotal =  round($user->cards()->where('cards.type_card_id', 1)->sum("amount"), 2);
         $debitAmountTotal = round($debitTotal, 2) - round($totalLendings, 2);
 
+        
         $data = array(
             'full_credit' => $creditLineTotal,
             'aviable_credit' => $creditAmountTotal,
@@ -130,8 +132,16 @@ class AuthController extends Controller
             'aviable_debit' => $debitAmountTotal,
             'user' => $user->id
         );
-
+        
         try {
+            DataInfoUser::create([
+                'full_credit' => $creditLineTotal,
+                'aviable_credit' => $creditAmountTotal,
+                'full_debit' => $debitTotal,
+                'aviable_debit' => $debitAmountTotal,
+                'user_id' => $user->id,
+                'created_at' => $dateNow
+            ]);
             return response()->json([
                 'res' => true,
                 'data' => $data
