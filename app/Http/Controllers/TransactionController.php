@@ -113,11 +113,109 @@ class TransactionController extends Controller
         $value = ( $currentMoth - $lastMonth) / $lastMonth;
         return round($value * 100, 2);
     }
+    
+    public function ActualCurrentMoney(){
+        try {
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+            $user = User::find(auth()->user()->id);
+            
+            $dataLandings = $user->landings()
+            ->join('states', 'landings.state_id', '=', 'states.id')
+            ->where('landings.state_id', 1)
+            ->get();
+
+            $totalLendings = round($dataLandings->sum("amount"), 2);
+            $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
+            $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
+            $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
+            $debitAmountTotal = round($debitTotal, 2) - round($totalLendings, 2);
+            
+            $fullCreditPorcent = 0;
+            $aviableCreditPorcent = 0;
+            $fullDebitPorcent = 0;
+            $aviableDebitPorcent = 0;
+            
+            $lastDataMonth = $user->data_info_user()->whereDate('data_info_users.created_at', '<', $dateNow)->first();
+
+            if ($lastDataMonth != null) {
+                $fullCreditPorcent =  $this->promedio($creditLineTotal, $lastDataMonth["full_credit"]); 
+                $aviableCreditPorcent = $this->promedio($creditAmountTotal,$lastDataMonth["aviable_credit"]);
+                $fullDebitPorcent = $this->promedio($debitTotal,$lastDataMonth["full_debit"]);
+                $aviableDebitPorcent = $this->promedio($debitAmountTotal,$lastDataMonth["aviable_debit"]);
+            }
+
+            $data = array(
+                'full_credit' => array($creditLineTotal, $fullCreditPorcent),
+                'aviable_credit' => array($creditAmountTotal, $aviableCreditPorcent),
+                'full_debit' => array($debitTotal, $fullDebitPorcent),
+                'aviable_debit' => array( round($debitAmountTotal, 2), $aviableDebitPorcent),
+                'full_lending' => array($totalLendings, 0),
+            );
+
+            return response()->json([
+                'res' => true,
+                'msg' => $data,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage(),
+            ], 200);
+        }
+    }
+
+    public function dataxMonth()
+    {
+        try {
+            $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+            $user = User::find(auth()->user()->id);
+            
+            $dataxMonth = $user->data_info_user()
+                ->whereDate('data_info_users.created_at', '<', $dateNow->addDays(1))
+                ->limit(12)
+                ->orderBy('data_info_users.created_at', 'desc')
+                ->get();
+
+            return response()->json([
+                'res' => true,
+                'msg' => $dataxMonth,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage(),
+            ], 200);
+        }
+    }
+
+    public function Lendings()
+    {
+        try {
+            $user = User::find(auth()->user()->id);
+            
+            $dataLandings = $user->landings()
+            ->join('states', 'landings.state_id', '=', 'states.id')
+            ->where('landings.state_id', 1)
+            ->get();
+
+            return response()->json([
+                'res' => true,
+                'msg' => $dataLandings,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage(),
+            ], 200);
+        }
+    }
 
     public function DataDashboard()
     {
         try {
-
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
             $user = User::find(auth()->user()->id);
             
