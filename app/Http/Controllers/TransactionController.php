@@ -147,7 +147,7 @@ class TransactionController extends Controller
             }
 
             $dataxMonth = $user->data_info_user()
-                ->whereDate('data_info_users.created_at', '<', $dateNow)
+                ->whereDate('data_info_users.created_at', '<', $dateNow->addDays(1))
                 ->limit(12)
                 ->orderBy('data_info_users.created_at', 'desc')
                 ->get();
