@@ -6,17 +6,11 @@ use App\Http\Controllers\ColorController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    // Debit
-    Route::post('/card/create/DebitCard', [CardController::class, 'createDebitCard']);
-
-    // credit
-    Route::post('/card/create/CreditCard', [CardController::class, 'createCreditCard']);
-
-    Route::get('/card/showOne/{id}', [CardController::class, 'showOne']);
-    Route::get('/card/showAll', [CardController::class, 'showAll']);
+    Route::post('/card/create/debit', [CardController::class, 'createDebitCard']);
+    Route::post('/card/create/credit', [CardController::class, 'createCreditCard']);
+    Route::get('/card/show/{id}', [CardController::class, 'showOne']);
+    Route::get('/cards', [CardController::class, 'showAll']);
     Route::post('/card/update/{id}', [CardController::class, 'update']);
     Route::post('/card/UpdateState/{id}', [CardController::class, 'UpdateState']);
-    Route::delete('/card/delete/{id}', [CardController::class, 'destroy']);
-    
-    Route::get('/colors', [ColorController::class, 'showAll']);
+    // Route::delete('/card/delete/{id}', [CardController::class, 'destroy']);
 });

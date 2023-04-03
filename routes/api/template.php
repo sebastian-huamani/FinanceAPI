@@ -9,11 +9,11 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::post('/template/create', [ TemplateController::class, 'create' ]);
     
-    Route::get('/template/showOne/{id}', [ TemplateController::class, 'showOne' ]);
+    Route::get('/template/show/{id}', [ TemplateController::class, 'showOne' ]);
     Route::post('/template/update/{id}', [ TemplateController::class, 'update' ]);
     Route::delete('/template/delete/{id}', [ TemplateController::class, 'destroy' ]);
     
-    Route::get('/template/showAll', [ TemplateController::class, 'showAll' ]);
+    Route::get('/templates', [ TemplateController::class, 'showAll' ]);
 });
 
 

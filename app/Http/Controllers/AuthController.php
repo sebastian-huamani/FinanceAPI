@@ -67,9 +67,17 @@ class AuthController extends Controller
 
     public function infoUser(Request $request)
     {
-        return response()->json(
-            $request->user()
-        );
+        try {
+            return response()->json([
+                'res' => true,
+                'msg' => $request->user()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => $e->getMessage()
+            ]);
+        }
     }
 
     public function updateInfoUser(Request $request)
