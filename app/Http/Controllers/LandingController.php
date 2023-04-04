@@ -99,7 +99,11 @@ class LandingController extends Controller
                 ->get();
 
             if (sizeof($lendings) == 0) {
-                throw new Exception();
+                return response()->json([
+                    'res' => true,
+                    'data' => null,
+                    'msg' => "No se encontraron datos en este mes",
+                ], 200);
             }
 
             return response()->json([
