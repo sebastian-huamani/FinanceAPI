@@ -168,4 +168,19 @@ class AuthController extends Controller
             "Mensaje" => "No autorizado, No se proporcionó Token o es invalido"
         ], 401);
     }
+
+    public function pruebas(Request $request){
+
+        // $ip = \Request::getClientIp(true);
+        $ip = $request->ip();
+        $browser = $request->header('User-Agent');
+
+        return response()->json([
+            'res' => true,
+            'ip' => $ip,
+            'browser' => $browser,
+            'time' => $request->time
+        ]);
+    }
+
 }
