@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
 use App\Models\DataInfoUser;
+use App\Models\sessionDivice;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -40,6 +41,9 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
+        $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'res' => false,
@@ -57,12 +61,20 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+        $user->sessionDivices()->create([
+            'client_ip' => $request->ip(),
+            'browser' => $request->header('User-Agent'),
+            'user_id' => $user->id,
+            'created_at' => $dateNow,
+            'updated_at' => $dateNow,
+        ]);
 
         return response()->json([
             'res' => true,
             'access_token' => $token,
             'token_type' => 'Bearer'
-        ]);
+            ]);
+        
     }
 
     public function infoUser(Request $request)
@@ -83,7 +95,7 @@ class AuthController extends Controller
     public function updateInfoUser(Request $request)
     {
         try {
-            $user = User::where('id',auth()->user()->id )->first();
+            $user = User::where('id', auth()->user()->id)->first();
 
             $user->update([
                 'name' => $request->name,
@@ -132,7 +144,7 @@ class AuthController extends Controller
         $debitTotal =  round($user->cards()->where('cards.type_card_id', 1)->sum("amount"), 2);
         $debitAmountTotal = round($debitTotal, 2) - round($totalLendings, 2);
 
-        
+
         $data = array(
             'full_credit' => $creditLineTotal,
             'aviable_credit' => $creditAmountTotal,
@@ -140,7 +152,7 @@ class AuthController extends Controller
             'aviable_debit' => $debitAmountTotal,
             'user' => $user->id
         );
-        
+
         try {
             DataInfoUser::create([
                 'full_credit' => $creditLineTotal,
@@ -169,18 +181,27 @@ class AuthController extends Controller
         ], 401);
     }
 
-    public function pruebas(Request $request){
+    public function pruebas(Request $request)
+    {
+        try {
+            // $ip = \Request::getClientIp(true);
+            $ip = $request->ip();
+            $browser = $request->header('User-Agent');
+            $user = User::find(2);
+            $userSession = $user->sessionDivices();
 
-        // $ip = \Request::getClientIp(true);
-        $ip = $request->ip();
-        $browser = $request->header('User-Agent');
-
-        return response()->json([
-            'res' => true,
-            'ip' => $ip,
-            'browser' => $browser,
-            'time' => $request->time
-        ]);
+            return response()->json([
+                'res' => true,
+                'ip' => $ip,
+                'browser' => $browser,
+                'time' => $request->time,
+                'user_session' => $userSession,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'e' => $e->getMessage()
+            ]);
+        }
     }
-
 }

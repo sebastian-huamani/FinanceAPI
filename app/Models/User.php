@@ -49,6 +49,12 @@ class User extends Authenticatable
     }
 
     // One To Many
+    public function sessionDivices()
+    {
+        return $this->hasMany(sessionDivice::class);
+    }
+
+    // One To Many
     public function templates(){
         return $this->hasMany(Template::class);
     }
