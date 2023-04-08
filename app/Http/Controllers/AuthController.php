@@ -61,13 +61,6 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        $user->sessionDivices()->create([
-            'client_ip' => $request->ip(),
-            'browser' => $request->header('User-Agent'),
-            'user_id' => $user->id,
-            'created_at' => $dateNow,
-            'updated_at' => $dateNow,
-        ]);
 
         return response()->json([
             'res' => true,
@@ -119,7 +112,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'res' => true,
@@ -136,7 +129,7 @@ class AuthController extends Controller
             ->join('states', 'landings.state_id', '=', 'states.id')
             ->where('landings.state_id', 1)
             ->get();
-
+ 
 
         $totalLendings = round($dataLandings->sum("amount"), 2);
         $creditLineTotal = round($user->cards()->where('cards.type_card_id', 2)->sum("bottom_line"), 2);
