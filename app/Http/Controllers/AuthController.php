@@ -176,28 +176,76 @@ class AuthController extends Controller
         ], 401);
     }
 
-    public function pruebas(Request $request)
+    public function allTransaction()
     {
         try {
-            $user = User::where('id', 2)->first();
+            $user = User::where('id', auth()->user()->id)->first();
 
             $data = $user->templates()->get()->map(function(Template $template){
                 $amount = Item::where('template_id', $template->id)->sum('amount');
                 return [ $template->title, $amount];
             });
 
-            $categories = [];
-            $values = [];
+            return response()->json([
+                'res' => true,
+                'msg' => $data,
+            ]);
 
-            foreach ($data as $value) {
-                array_push($categories, $value[0]);
-                array_push($values, $value[1]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'e' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function trasactionMothYear(Request $request)
+    {
+
+        try {
+            $data = [];
+            $user = User::where('id', auth()->user()->id)->first();
+            $templates = $user->templates;
+
+            foreach ($templates as $template) {
+                $amount = Item::where('template_id', $template->id)
+                ->whereMonth('created_at',$request->month)
+                ->whereYear('created_at',$request->year)
+                ->sum('amount');
+                array_push($data, [ $template->title, $amount]);
             }
 
             return response()->json([
                 'res' => true,
-                'categories' => $categories,
-                'values' => $values,
+                'msg' => $data,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'e' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function transactionsFromTo(Request $request)
+    {
+        try {
+            $data = [];
+            $user = User::where('id', auth()->user()->id)->first();
+            $templates = $user->templates;
+
+            foreach ($templates as $template) {
+                $amount = Item::where('template_id', $template->id)
+                ->whereDate('created_at', '>=', $request->from)
+                ->whereDate('created_at', '<=', $request->to)
+                ->sum('amount');
+                array_push($data, [ $template->title, $amount]);
+            }
+
+            return response()->json([
+                'res' => true,
+                'msg' => $data,
             ]);
 
         } catch (\Exception $e) {
