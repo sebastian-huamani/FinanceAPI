@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
 use App\Models\DataInfoUser;
+use App\Models\Item;
 use App\Models\sessionDivice;
+use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -177,19 +179,27 @@ class AuthController extends Controller
     public function pruebas(Request $request)
     {
         try {
-            // $ip = \Request::getClientIp(true);
-            $ip = $request->ip();
-            $browser = $request->header('User-Agent');
-            $user = User::find(2);
-            $userSession = $user->sessionDivices();
+            $user = User::where('id', 2)->first();
+
+            $data = $user->templates()->get()->map(function(Template $template){
+                $amount = Item::where('template_id', $template->id)->sum('amount');
+                return [ $template->title, $amount];
+            });
+
+            $categories = [];
+            $values = [];
+
+            foreach ($data as $value) {
+                array_push($categories, $value[0]);
+                array_push($values, $value[1]);
+            }
 
             return response()->json([
                 'res' => true,
-                'ip' => $ip,
-                'browser' => $browser,
-                'time' => $request->time,
-                'user_session' => $userSession,
+                'categories' => $categories,
+                'values' => $values,
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
