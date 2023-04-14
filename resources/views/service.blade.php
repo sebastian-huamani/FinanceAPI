@@ -1,5 +1,5 @@
 @extends('layout.app')
 
 @section('body')
-    test 
+    service
 @endsection
