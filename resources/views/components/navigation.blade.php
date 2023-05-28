@@ -1,10 +1,49 @@
-<div>
-    <h1 class="p-4 text-4xl font-semibold">FinanceMe</h1>
-    <nav class="bg-red-300">
-        <ul class="flex gap-16 py-2 pl-4">
-            <li><a href="{{route('home')}}">Home</a></li>
-            <li><a href="{{route('service')}}">Servicio</a></li>
-            <li><a href="{{route('apidoc')}}">Documentacion Api</a></li>
-        </ul>
-    </nav>
+<div class="px-8 h-14 flex justify-between items-center font-semibold">
+    <div class="flex items-center gap-4">
+        <i class="fa-solid fa-cloud text-xl"></i>
+        <p class="font-bold text-2xl"><a href="\">Logo</a></p>
+    </div>
+
+    <div class="w-2/5 mx-auto">
+        <div class="flex justify-between items-center">
+            <a href="#">Contact</a>
+            <a href="#">Blog</a>
+
+            <button id="dropdownDefaultButton"  data-dropdown-toggle="dropdown"
+                class="focus:ring-blue-300 inline-flex items-center "
+                type="button">Productos <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg></button>
+            <!-- Dropdown menu -->
+            <div id="dropdown"
+                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                    </li>
+                    <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+                    </li>
+                </ul>
+            </div>
+
+            <a href="#">Home</a>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-10">
+        <div class="{{ request()->is('register') ? 'bg-black rounded text-white py-1 px-4' : '' }}">
+            <a href="register"> Register </a>
+        </div>
+        <div class="{{ request()->is(['login', '/']) ? 'bg-black rounded text-white py-1 px-4' : '' }}">
+            <a href="login">Login</a>
+        </div>
+    </div>
 </div>

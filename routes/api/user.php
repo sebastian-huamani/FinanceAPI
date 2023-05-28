@@ -9,7 +9,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/user/perfil', [ AuthController::class, 'infoUser']);
     Route::post('/user/update', [ AuthController::class , 'updateInfoUser']);
-    Route::get('/user/divices', [ SessionDiviceController::class, 'showAll']);
-
+    // Route::get('/user/divices', [ SessionDiviceController::class, 'showAll']);
 });
 

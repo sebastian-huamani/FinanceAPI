@@ -21,15 +21,7 @@ class LandingFactory extends Factory
     public function definition()
     {
         $amount = fake()->randomFloat(2, 200, 600);
-        $list = [];
-        for ($i=0; $i < 4; $i++) { 
-            $randomDays = rand(15, 30);
-            $lastValue = round($amount - fake()->randomFloat(2, 20, 80), 2);
-            $changeDate = Carbon::now(new DateTimeZone('America/Lima'))->subDays($randomDays);
-            $paymentDate = Carbon::now(new DateTimeZone('America/Lima'))->subDays($randomDays);
-            array_push($list, [$changeDate, $lastValue , $paymentDate]);
-        }
-
+        
         return [
             'amount' => $amount,
             'created_date_lending' => fake()->dateTimeBetween('-12 week', 'now'),
@@ -37,7 +29,6 @@ class LandingFactory extends Factory
             'debtor' => fake()->userName(),
             'user_id' => fake()->numberBetween(1, User::count()),
             'state_id' => fake()->randomElement([1, 2]),
-            'postpone' => fake()->randomElement([ [] , $list ])
         ];
     }
 }
