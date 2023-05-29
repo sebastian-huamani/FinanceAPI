@@ -13,6 +13,7 @@ use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -109,8 +110,6 @@ class AuthController extends Controller
             ]);
         }
     }
-
-
 
     public function logout(Request $request)
     {
@@ -254,5 +253,58 @@ class AuthController extends Controller
                 'e' => $e->getMessage()
             ]);
         }
+    }
+
+
+    // 
+    public function registerBase(Request $request)
+    {
+        $credentials = $request->validate([
+            'name' => ['required', 'string'],
+            'lastname' => ['required', 'string'],
+            'email' => ['required' ,'email', 'string'],
+            'password' =>  ['required', 'string'],
+            'repeatpassword' =>  ['required', 'string']
+        ]);
+        
+        return $credentials;
+
+        $user = new User();
+        $user->name = $credentials['name'];
+        $user->lastname = $credentials['lastname'];
+        $user->email = $credentials['email'];
+        $user->password = Hash::make($credentials['password']);
+        $user->save();
+         
+        Auth::login($user);
+        
+        return redirect(route('dashboard'));
+    }
+
+    public function loginBase(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required' ,'email', 'string'],
+            'password' =>  ['required', 'string']
+        ]);
+
+        $remember = request()->filled('remember');
+
+        if(Auth::attempt($credentials, $remember)){
+            request()->session()->regenerate();
+            return redirect('dashboard')->with('status', 'Your are logged in');
+        }
+
+        throw ValidationException::withMessages([
+            'credencials' => __('auth.failed')
+        ]);
+        return redirect('login');
+    }
+
+    public function logoutBase()
+    {
+        Auth::logout();
+
+        return redirect('login');
     }
 }
