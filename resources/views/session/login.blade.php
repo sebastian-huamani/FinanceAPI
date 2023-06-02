@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('body')
-    <div class="flex h-80vh items-center justify-center">
+    <div class="flex h-80vh items-center justify-center ">
         <form class="mx-auto w-full sm:w-3/5 md:w-2/5" method="POST">
             @csrf
             <div class="mb-6">

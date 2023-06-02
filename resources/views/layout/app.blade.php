@@ -33,5 +33,10 @@
         @section('body')
         @show
     </div>
+
+    <div class="mt-20">
+        <x-footer/>
+    </div>
+
 </body>
 </html>

@@ -59,5 +59,45 @@
             </button>
         </div>
 
+        <div class="w-4/5 mx-auto mt-20">
+            <div class="mt-10 w-full grid grid-cols-2 items-center justify-between gap-32">
+                <div class="w-4/5 mx-auto">
+                    <img src="{{ URL::asset('/images/pexels-dids-1420213.jpg') }}" class="object-cover" alt="...">
+                </div>
+                <div class="">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, et, illum explicabo a facilis pariatur
+                    quos, velit officia voluptas assumenda dolore consequatur. Accusamus vitae corrupti velit nam hic quos
+                    in?
+                </div>
+            </div>
+
+            <div class="mt-10 w-full grid grid-cols-2 items-center justify-between gap-32">
+                <div class="w-4/5 mx-auto order-2">
+                    <img src="{{ URL::asset('/images/pexels-dids-1420213.jpg') }}" class="object-cover" alt="...">
+                </div>
+                <div class="order-1">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, et, illum explicabo a facilis pariatur
+                    quos, velit officia voluptas assumenda dolore consequatur. Accusamus vitae corrupti velit nam hic quos
+                    in?
+                </div>
+            </div>
+
+            <div class="mt-10 w-full grid grid-cols-2 items-center justify-between gap-32">
+                <div class="w-4/5 mx-auto">
+                    <img src="{{ URL::asset('/images/pexels-dids-1420213.jpg') }}" class="object-cover" alt="...">
+                </div>
+                <div class="">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, et, illum explicabo a facilis pariatur
+                    quos, velit officia voluptas assumenda dolore consequatur. Accusamus vitae corrupti velit nam hic quos
+                    in?
+                </div>
+            </div>
+        </div>
+
+        <div class="w-4/5 mx-auto mt-20 bg-black">
+            <div >
+                <img src="{{ URL::asset('/images/pexels-wayan-prawira-1150559.jpg') }}" class="object-cover w-full h-80" alt="...">
+            </div>
+        </div>
     </div>
 @endsection

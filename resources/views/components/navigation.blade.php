@@ -6,7 +6,7 @@
 
     <div class="w-2/5 mx-auto">
         <div class="flex justify-between items-center">
-            <a href="#">Contact</a>
+            <a href="{{route('contact')}}">Contact</a>
             <a href="#">Blog</a>
 
             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
@@ -23,21 +23,12 @@
                     aria-labelledby="dropdownDefaultButton">
                     <li>
                         <a href="#"
-                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Finance</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="#"
                             class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
-                            out</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
 
