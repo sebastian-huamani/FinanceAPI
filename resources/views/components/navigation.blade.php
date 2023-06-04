@@ -1,7 +1,7 @@
 <div class="px-8 h-14 flex justify-between items-center font-semibold">
     <div class="flex items-center gap-4">
         <i class="fa-solid fa-cloud text-xl"></i>
-        <p class="font-bold text-2xl"><a href="/">Logo</a></p>
+        <p class="font-bold text-2xl"><a href="/">HT</a></p>
     </div>
 
     <div class="w-2/5 mx-auto">
@@ -22,7 +22,7 @@
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                     aria-labelledby="dropdownDefaultButton">
                     <li>
-                        <a href="#"
+                        <a href="{{route('financeme')}}"
                             class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Finance</a>
                     </li>
                     {{-- <li>

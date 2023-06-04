@@ -24,23 +24,24 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $users = User::factory(1)->create();
-        // State::factory(1)->create([
-        //     'name' => 'Activo'
-        // ]);
-        // State::factory(1)->create([
-        //     'name' => 'Desactivado'
-        // ]);
+        State::factory(1)->create([
+            'name' => 'Activo'
+        ]);
+        State::factory(1)->create([
+            'name' => 'Desactivado'
+        ]);
 
 
         // Template::factory(150)->create();
 
-        // TypeCard::factory(1)->create([
-        //     'name' => 'Debit'
-        // ]);
+        TypeCard::factory(1)->create([
+            'name' => 'Debit'
+        ]);
         
-        // TypeCard::factory(1)->create([
-        //     'name' => 'Credit'
-        // ]);
+        TypeCard::factory(1)->create([
+            'name' => 'Credit'
+        ]);
+
 
         // foreach ($users as $user) {
         //     $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
@@ -57,8 +58,8 @@ class DatabaseSeeder extends Seeder
         // }
 
 
-        $this->call(CardSeeder::class);
-        $this->call(TransactionSeeder::class);
+        $this->call(ColorSeeder::class);
+        // $this->call(TransactionSeeder::class);
         
         
         // Landing::factory(60)->create();

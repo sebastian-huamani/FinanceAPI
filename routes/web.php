@@ -5,6 +5,7 @@ use App\Http\Controllers\DataContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () { return view('home'); })->name('home');
+Route::get('/financeMe', function () { return view('financeme'); })->name('financeme');
 Route::get('/contact', [DataContactController::class, 'index'])->name('contact');
 Route::post('/contact', [DataContactController::class, 'create']);
 
