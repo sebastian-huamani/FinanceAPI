@@ -18,10 +18,10 @@ class ColorFactory extends Factory
     {
         return [
             'color' => $this->faker->word(),
-            'code_top' => $this->faker->safeHexColor(),
-            'code_bottom' => $this->faker->safeHexColor(),
-            'code_type' => $this->faker->safeHexColor(),
-            'code_button' => $this->faker->safeHexColor()
+            'color_panel_top' => $this->faker->safeHexColor(),
+            'color_panel_bottom' => $this->faker->safeHexColor(),
+            'color_type' => $this->faker->safeHexColor(),
+            'color_button' => $this->faker->safeHexColor()
         ];
     }
 }
