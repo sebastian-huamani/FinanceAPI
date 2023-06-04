@@ -9,20 +9,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="finan16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="finan32.png">
 
-    {{-- prism --}}
-    {{-- <link rel="stylesheet" href="{{ asset('css/prism.css')  }}"> --}}
-    {{-- <script src="{{ asset('js/prism.js')  }}"></script> --}}
-
-    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
-
-    {{-- ajax  --}}
-    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
-    
     {{-- font awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    {{-- flowbite --}}
-    {{-- <script src="../path/to/flowbite/dist/flowbite.min.js"></script> --}}
+    {{-- jquery --}}
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>

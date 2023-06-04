@@ -1,12 +1,12 @@
 <div class="px-8 h-14 flex justify-between items-center font-semibold">
     <div class="flex items-center gap-4">
         <i class="fa-solid fa-cloud text-xl"></i>
-        <p class="font-bold text-2xl"><a href="\">Logo</a></p>
+        <p class="font-bold text-2xl"><a href="/">Logo</a></p>
     </div>
 
     <div class="w-2/5 mx-auto">
         <div class="flex justify-between items-center">
-            <a href="{{route('contact')}}">Contact</a>
+            <a href="{{route('contact')}}">Contacto</a>
             <a href="#">Blog</a>
 
             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
@@ -32,7 +32,7 @@
                 </ul>
             </div>
 
-            <a href="#">Home</a>
+            <a href="/">Home</a>
         </div>
     </div>
 

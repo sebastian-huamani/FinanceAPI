@@ -3,6 +3,7 @@
 @section('body')
     <div class="flex h-80vh items-center justify-center ">
         <form class="mx-auto w-full sm:w-3/5 md:w-2/5" method="POST">
+            <p class="text-4xl font-bold mb-10">Login :</p>
             @csrf
             <div class="mb-6">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email:</label>

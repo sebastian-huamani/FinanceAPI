@@ -262,13 +262,11 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'name' => ['required', 'string'],
             'lastname' => ['required', 'string'],
-            'email' => ['required' ,'email', 'string'],
+            'email' => ['required' ,'email', 'string', 'unique:users'],
             'password' =>  ['required', 'string'],
             'repeatpassword' =>  ['required', 'string']
         ]);
         
-        return $credentials;
-
         $user = new User();
         $user->name = $credentials['name'];
         $user->lastname = $credentials['lastname'];

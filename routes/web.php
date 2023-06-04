@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DataContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () { return view('home'); })->name('home');
-Route::get('/contact', function () { return view('contact'); })->name('contact');
+Route::get('/contact', [DataContactController::class, 'index'])->name('contact');
+Route::post('/contact', [DataContactController::class, 'create']);
 
 
 Route::middleware(['guest'])->group( function(){

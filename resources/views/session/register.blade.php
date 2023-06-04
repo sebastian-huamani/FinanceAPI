@@ -3,6 +3,7 @@
 @section('body')
     <div class="flex h-80vh items-center justify-center mt-5">
         <form class="mx-auto w-full sm:w-3/5 md:w-2/5" method="post">
+            <p class="text-4xl font-bold mb-10">Registro :</p>
             @csrf
             <div class="grid grid-cols-2 gap-4 items-center">
                 <div class="mb-6">
