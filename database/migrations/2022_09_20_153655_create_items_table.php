@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('body');
             $table->decimal('amount');
             $table->foreignId('template_id')->constrained();
+            $table->int('is_lending');    
             $table->timestamps();
         }); 
     }

@@ -62,7 +62,8 @@ class TransactionController extends Controller
                 'body' => $body,
                 'amount'=> $request->amount,
                 'template_id' => $request->template_id,
-                'created_at' => $request->register_Item
+                'created_at' => $request->register_Item,
+                'is_lending' => $request->is_lending
             ]);
                 
             $card->update([
@@ -404,7 +405,8 @@ class TransactionController extends Controller
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount * -1,
                 'template_id' => 1,
-                'created_at' => $dateNow
+                'created_at' => $dateNow,
+                'is_lending' => 0
             ]);
 
             $toCard->items()->create([
@@ -412,7 +414,8 @@ class TransactionController extends Controller
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount,
                 'template_id' => 1,
-                'created_at' => $dateNow
+                'created_at' => $dateNow,
+                'is_lending' => 0
             ]);
 
             $fromCard->update([
