@@ -328,7 +328,8 @@ class TransactionController extends Controller
             $item->update([
                 'body' => $body,
                 'updated_at' => $dateNow,
-                'amount' => $request->amount
+                'amount' => $request->amount,
+                'is_lending' => $request->is_lending
             ]);
 
             $card->update([
