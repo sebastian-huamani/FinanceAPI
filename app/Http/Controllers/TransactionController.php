@@ -404,7 +404,7 @@ class TransactionController extends Controller
                 'title'=> "Transaccion entre Cuentas",
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount * -1,
-                'template_id' => 1,
+                'template_id' => 0,
                 'created_at' => $dateNow,
                 'is_lending' => 0
             ]);
@@ -413,7 +413,7 @@ class TransactionController extends Controller
                 'title'=> "Transaccion entre Cuentas",
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount,
-                'template_id' => 1,
+                'template_id' => 0,
                 'created_at' => $dateNow,
                 'is_lending' => 0
             ]);
