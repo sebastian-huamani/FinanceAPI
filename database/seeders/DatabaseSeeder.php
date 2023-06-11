@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
         State::factory(1)->create([
             'name' => 'Desactivado'
         ]);
+        State::factory(1)->create([
+            'name' => 'Pendiente'
+        ]);
 
 
         // Template::factory(150)->create();

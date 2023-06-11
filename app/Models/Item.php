@@ -9,7 +9,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title' ,'body', 'amount', 'template_id', 'created_at', 'updated_at', 'is_lending'];
+    protected $fillable = ['title' ,'body', 'amount', 'template_id', 'created_at', 'updated_at'];
     protected $casts = ['body' => 'array'];
 
     //Many To Many (Polymorphic)
@@ -21,4 +21,7 @@ class Item extends Model
         return $this->belongsTo(Template::class);
     }
 
+    public function landings() {
+        return $this->hasMany(Landing::class);
+    }
 }

@@ -9,14 +9,16 @@ class Landing extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['amount', 'created_date_lending', 'payment_date_lending', 'user_id', 'state_id', 'debtor', 'postpone', 'card_id', 'type_lending' ,'created_at', 'updated_at'];
-    protected $casts = [ 'postpone' => 'array' ];
+    protected $fillable = ['amount', 'payment_date_lending', 'state_id', 'debtor', 'item_id', 'is_lending', 'is_fee', 'history_quota' , 'created_at', 'updated_at'];
+    protected $casts = ['history_quota' => 'array'];
 
-    public function cards(){
+    public function cards()
+    {
         return $this->morphToMany('App\Models\Card', 'transactionable');
     }
 
-    public function users(){
+    public function users()
+    {
         return $this->hasMany(User::class);
     }
 }

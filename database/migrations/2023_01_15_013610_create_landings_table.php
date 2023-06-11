@@ -15,12 +15,14 @@ return new class extends Migration
     {
         Schema::create('landings', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount');
-            $table->dateTime('payment_date_lending');
-            $table->string('debtor');
+            $table->decimal('amount')->nullable();
+            $table->dateTime('payment_date_lending')->nullable();
+            $table->string('debtor')->nullable();
             $table->foreignId('item_id')->constrained();
             $table->foreignId('state_id')->constrained();
-            $table->foreignId('close')->constrained();
+            $table->string('history_quota')->nullable();    
+            $table->int('is_lending')->nullable();    
+            $table->int('is_fee')->nullable();
             $table->timestamps();
         });
     }

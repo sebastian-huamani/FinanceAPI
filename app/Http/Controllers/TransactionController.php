@@ -7,6 +7,7 @@ use App\Http\Requests\TransactionCardsRequest;
 use App\Models\Card;
 use App\Models\DataInfoUser;
 use App\Models\Item;
+use App\Models\Landing;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -42,7 +43,7 @@ class TransactionController extends Controller
         }
     }
 
-    public function createItemCount(ItemRequest $request)
+    public function createItemCount(Request $request)
     {
         DB::beginTransaction();
 
@@ -57,15 +58,26 @@ class TransactionController extends Controller
 
             $card = Card::where('id', $request->cards_id)->where('user_id', auth()->user()->id)->first();
 
-            $card->items()->create([
+            $item = $card->items()->create([
                 'title'=> $request->title, 
                 'body' => $body,
                 'amount'=> $request->amount,
                 'template_id' => $request->template_id,
                 'created_at' => $request->register_Item,
-                'is_lending' => $request->is_lending
             ]);
-                
+
+            if( $request->has('lending') || $request->has('fee_amount') ){
+                Landing::create([
+                    'item_id' => $item->id,
+                    'state_id' => 3,
+                    'is_lending' => $request->has('lending') ? 1 : 0,
+                    'is_fee' => $request->has('is_fee') ? 1 : 0,
+                ]);
+            }
+
+
+
+
             $card->update([
                 'amount'=> $card->amount + $request->amount
             ]);
@@ -150,7 +162,7 @@ class TransactionController extends Controller
                 'aviable_credit' => array($creditAmountTotal, $aviableCreditPorcent),
                 'full_debit' => array($debitTotal, $fullDebitPorcent),
                 'aviable_debit' => array( round($debitAmountTotal, 2), $aviableDebitPorcent),
-                'full_lending' => array($totalLendings, 0),
+                // 'full_lending' => array($totalLendings, 0),
             );
 
             return response()->json([
@@ -329,7 +341,6 @@ class TransactionController extends Controller
                 'body' => $body,
                 'updated_at' => $dateNow,
                 'amount' => $request->amount,
-                'is_lending' => $request->is_lending
             ]);
 
             $card->update([
@@ -407,7 +418,6 @@ class TransactionController extends Controller
                 'amount'=> $request->amount * -1,
                 'template_id' => 1,
                 'created_at' => $dateNow,
-                'is_lending' => 1
             ]);
 
             $toCard->items()->create([
@@ -416,7 +426,6 @@ class TransactionController extends Controller
                 'amount'=> $request->amount,
                 'template_id' => 1,
                 'created_at' => $dateNow,
-                'is_lending' => 1
             ]);
 
             $fromCard->update([
