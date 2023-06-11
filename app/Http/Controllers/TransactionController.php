@@ -448,7 +448,7 @@ class TransactionController extends Controller
             
             return response()->json([
                 'res' => false,
-                'msg' => "Transferencia no Realizada" . $e->getMessage(),
+                'msg' => "Transferencia no Realizada",
             ], 200);
         }
     }

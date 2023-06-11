@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $users = User::factory(1)->create();
+        User::factory(1)->create();
         State::factory(1)->create([
             'name' => 'Activo'
         ]);
@@ -34,8 +34,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Pendiente'
         ]);
 
-
-        // Template::factory(150)->create();
+        Template::factory(1)->create();
 
         TypeCard::factory(1)->create([
             'name' => 'Debit'
