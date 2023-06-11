@@ -45,12 +45,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'Credit'
         ]);
 
-        Template::factory(1)->create([
-            'title' => 'transferencia entre cuentas',
-            'body' => [[123.54,"number"],["dog","text"]],
-            'states_id' => 1,
-            'user_id' => 1,
-        ]);
+        // Template::factory(1)->create([
+        //     'title' => 'transferencia entre cuentas',
+        //     'body' => [[123.54,"number"],["dog","text"]],
+        //     'states_id' => 1,
+        //     'user_id' => 1,
+        // ]);
 
 
         // foreach ($users as $user) {
