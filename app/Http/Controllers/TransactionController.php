@@ -70,7 +70,7 @@ class TransactionController extends Controller
                 $history_quota = [];
                 if( $request->has('fee_amount')){
                     for ($i=0; $i < $request->fee_amount ; $i++) { 
-                        array_push($history_quota, [$i => '']);
+                        array_push($history_quota, [$i , '']);
                     }
                 }
                 Landing::create([
