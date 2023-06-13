@@ -57,11 +57,13 @@ class TransactionController extends Controller
             }
 
             $card = Card::where('id', $request->cards_id)->where('user_id', auth()->user()->id)->first();
+            $especial = $request->has('lending') || $request->has('fee_amount') ? 1 : 0;
 
             $item = $card->items()->create([
                 'title'=> $request->title, 
                 'body' => $body,
                 'amount'=> $request->amount,
+                'especial' => $especial, 
                 'template_id' => $request->template_id,
                 'created_at' => $request->register_Item,
             ]);
@@ -423,6 +425,7 @@ class TransactionController extends Controller
                 'title'=> "Transaccion entre Cuentas",
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount * -1,
+                'especial' => 0,
                 'template_id' => 1,
                 'created_at' => $dateNow,
             ]);
@@ -431,6 +434,7 @@ class TransactionController extends Controller
                 'title'=> "Transaccion entre Cuentas",
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount,
+                'especial' => 0,
                 'template_id' => 1,
                 'created_at' => $dateNow,
             ]);
