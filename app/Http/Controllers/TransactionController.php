@@ -57,7 +57,11 @@ class TransactionController extends Controller
             }
 
             $card = Card::where('id', $request->cards_id)->where('user_id', auth()->user()->id)->first();
-            $especial = $request->has('lending') || $request->has('fee_amount') ? 1 : 0;
+            if($request->has('lending') || $request->has('fee_amount')){
+                $especial = 1;
+            } else {
+                $especial = 0;
+            }
 
             $item = $card->items()->create([
                 'title'=> $request->title, 
