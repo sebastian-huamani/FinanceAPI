@@ -9,7 +9,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title' ,'body', 'amount', 'template_id', 'created_at', 'updated_at'];
+    protected $fillable = ['title' ,'body', 'amount', 'template_id', 'especial', 'created_at', 'updated_at'];
     protected $casts = ['body' => 'array'];
 
     //Many To Many (Polymorphic)
