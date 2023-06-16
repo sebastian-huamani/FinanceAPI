@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Item extends Model
 {
@@ -25,7 +26,25 @@ class Item extends Model
         return $this->hasMany(Landing::class);
     }
 
-    public function scopeByActive($query) {
-        $query->join('landings', 'items.id', 'landings.item_id')->where('items.especial', 1)->where('landings.state_id', 3)->get();
+    public function scopeByState($query, int $state_id) {
+        $query->join('landings', 'items.id', 'landings.item_id')->where('landings.state_id', $state_id)->get();
     }
+
+    public static function lendingByEspecialState(int $especial , int $state_id){
+        $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
+        $items = [];
+
+        foreach ($cards as $card) {
+            $card_ins = Card::where('id', $card)->first();
+            foreach ($card_ins->items as $item) {
+                if($item->especial == $especial && $item->ByState($state_id) ){
+                    array_push($items, $item);
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    
 }

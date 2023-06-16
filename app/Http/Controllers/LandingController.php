@@ -69,15 +69,10 @@ class LandingController extends Controller
     {
         try {
 
-            $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
-            $items = [];
-            foreach ($cards as $card) {
-                $card_ins = Card::where('id', $card)->first();
-                foreach ($card_ins->items as $item) {
-                    if($item->especial == 1 && $item->ByActive() ){
-                        array_push($items, $item);
-                    }
-                }
+            $items = Item::lendingByEspecialState(1, 3);
+            
+            if(!$cards){
+                throw new Exception();
             }
 
             return response()->json([
