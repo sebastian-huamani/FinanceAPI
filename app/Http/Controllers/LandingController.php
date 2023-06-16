@@ -68,10 +68,14 @@ class LandingController extends Controller
     public function showAllActives()
     {
         try {
-
             $items = Item::lendingByEspecialState(1, 3);
             
-           
+            if($items == -1 ){
+                return response()->json([
+                    'res' => true,
+                    'msg' => 'No se encontaron tarjetas', 
+                ], 200);
+            }
             return response()->json([
                 'res' => true,
                 'msg' => $items, 
@@ -88,25 +92,17 @@ class LandingController extends Controller
     public function showAllDesactives(Request $request)
     {
         try {
-            $lendings = Landing::where('user_id', auth()->user()->id)
-                ->join('states', 'landings.state_id', '=', 'states.id')
-                ->where('state_id', 2)
-                ->whereYear('landings.created_at', $request->year)
-                ->whereMonth('landings.created_at', $request->month)
-                ->select('landings.id', 'landings.amount', 'landings.created_date_lending', 'landings.payment_date_lending', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at', 'landings.card_id', 'landings.type_lending')
-                ->get();
-
-            if (sizeof($lendings) == 0) {
+            $items = Item::lendingByEspecialState(1, 2);
+            
+            if($items == -1 ){
                 return response()->json([
                     'res' => true,
-                    'data' => null,
-                    'msg' => "No se encontraron datos en este mes",
+                    'msg' => 'No se encontaron tarjetas', 
                 ], 200);
             }
-
             return response()->json([
                 'res' => true,
-                'msg' => $lendings,
+                'msg' => $items, 
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

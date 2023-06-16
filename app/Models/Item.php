@@ -32,6 +32,11 @@ class Item extends Model
 
     public static function lendingByEspecialState(int $especial , int $state_id){
         $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
+
+        if( !$cards){
+            return -1;
+        }
+
         $items = [];
 
         foreach ($cards as $card) {
