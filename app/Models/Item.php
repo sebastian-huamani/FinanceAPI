@@ -11,6 +11,7 @@ class Item extends Model
 
     protected $fillable = ['title' ,'body', 'amount', 'template_id', 'especial', 'created_at', 'updated_at'];
     protected $casts = ['body' => 'array'];
+    protected $table = 'items';
 
     //Many To Many (Polymorphic)
     public function cards(){
@@ -23,5 +24,9 @@ class Item extends Model
 
     public function landings() {
         return $this->hasMany(Landing::class);
+    }
+
+    static public function shortDataLending(int $id) {
+        Self::select('landings.id', 'items.title')->where('id', $id)->join('landings', 'lendings.item_id', 'items.id')->first()
     }
 }

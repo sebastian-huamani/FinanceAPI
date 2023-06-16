@@ -67,22 +67,14 @@ class LandingController extends Controller
     public function showAllActives()
     {
         try {
-            // $lendings = Landing::where('user_id', auth()->user()->id)
-            // ->join('states', 'landings.state_id', '=', 'states.id')
-            // ->where('state_id', 1)
-            // ->select('landings.id', 'landings.amount', 'landings.created_date_lending', 'landings.payment_date_lending', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at')
-            // ->get();
-
-            // $lendings = User::where('id', auth()->user()->id)->get()->cards->items;
-
             $user = User::find( Auth::user()->id);
             $cards = $user->cards;
 
             $lendings = [];
             foreach ($cards as $card) {
                 foreach ($card->items as $item) {
-                    if($item->landings->count() > 0){
-                        array_push($lendings, [$item, $item->landings]);
+                    if($item->especial == 1){
+                        array_push($lendings,  $item);
                     }
                 }
             }
