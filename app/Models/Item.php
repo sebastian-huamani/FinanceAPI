@@ -26,6 +26,6 @@ class Item extends Model
     }
 
     public function scopeByActive($query) {
-        $query->join('landings', 'items.id', 'landings.item_id')->where('landings.state_id', 3)->get();
+        $query->join('landings', 'items.id', 'landings.item_id')->where('items.especial', 1)->where('landings.state_id', 3)->get();
     }
 }
