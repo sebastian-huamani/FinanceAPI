@@ -71,10 +71,7 @@ class LandingController extends Controller
 
             $items = Item::lendingByEspecialState(1, 3);
             
-            if(!$cards){
-                throw new Exception();
-            }
-
+           
             return response()->json([
                 'res' => true,
                 'msg' => $items, 
