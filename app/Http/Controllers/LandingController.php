@@ -74,7 +74,7 @@ class LandingController extends Controller
             foreach ($cards as $card) {
                 $card_ins = Card::where('id', $card)->first();
                 foreach ($card_ins->items as $item) {
-                    if($item->especial == 1){
+                    if($item->especial == 1 || $item->ByActive() ){
                         array_push($items, $item);
                     }
                 }
