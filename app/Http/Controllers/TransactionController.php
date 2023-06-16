@@ -50,6 +50,7 @@ class TransactionController extends Controller
         try {
 
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+            $especial = 0;
 
             $body = [];
             for ($i=0; $i < sizeof($request->body) ; $i++) { 
@@ -59,8 +60,6 @@ class TransactionController extends Controller
             $card = Card::where('id', $request->cards_id)->where('user_id', auth()->user()->id)->first();
             if($request->has('lending') || $request->has('fee_amount')){
                 $especial = 1;
-            } else {
-                $especial = 0;
             }
 
             $item = $card->items()->create([
