@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\Item;
 use App\Models\Landing;
 use App\Models\User;
 use Carbon\Carbon;
@@ -67,25 +68,18 @@ class LandingController extends Controller
     public function showAllActives()
     {
         try {
-            $user = User::find( Auth::user()->id);
-            $cards = $user->cards;
 
-            $lendings = [];
+            $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
+           
+            $items = [];
             foreach ($cards as $card) {
-                foreach ($card->items as $item) {
-                    if($item->especial == 1){
-                        array_push($lendings,  $item);
-                    }
-                }
-            }
-
-            if (sizeof($lendings) == 0) {
-                throw new Exception();
+                $card_invoke = Card::where('id', $card)->first();
+                array_push($items, $card_invoke->items() );
             }
 
             return response()->json([
                 'res' => true,
-                'msg' => $lendings,
+                'msg' => $items, 
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
