@@ -70,11 +70,14 @@ class LandingController extends Controller
         try {
 
             $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
-           
             $items = [];
             foreach ($cards as $card) {
-                $card_invoke = Card::where('id', $card)->first();
-                array_push($items, $card_invoke->items() );
+                $card_ins = Card::where('id', $card)->first();
+                foreach ($card_ins->items as $item) {
+                    if($item->especial == 1){
+                        array_push($items, $item);
+                    }
+                }
             }
 
             return response()->json([
