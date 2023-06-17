@@ -130,15 +130,15 @@ class LandingController extends Controller
         }
     }
 
-    public function filter_lending($state, $card = null, $month, $year) {
+    public function filter_lending($state, $card , $month, $year) {
 
         try {
             $data = [];
 
-            if($card != ''){
-                $cardsByUser = Card::where('id', $card)->pluck("id");
-            }else {
+            if($card == 0){
                 $cardsByUser = Card::where('user_id', Auth::user()->id)->pluck("id");
+            }else {
+                $cardsByUser = Card::where('id', $card)->pluck("id");
             }
 
             foreach ($cardsByUser as $card_id) {
