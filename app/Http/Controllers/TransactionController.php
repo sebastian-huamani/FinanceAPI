@@ -50,7 +50,22 @@ class TransactionController extends Controller
         try {
 
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
-            $especial = 0;
+            
+            if( $request->has('lending') || $request->has('fee_amount') ){
+                $history_quota = [];
+                if( $request->has('fee_amount')){
+                    for ($i=0; $i < $request->fee_amount ; $i++) { 
+                        array_push($history_quota, [$i , '']);
+                    }
+                } 
+                
+                $lending = Landing::create([
+                    'state_id' => 3,
+                    'history_quota' =>  empty($history_quota) ? '' : $history_quota,
+                    'is_lending' => $request->has('lending') ? 1 : 0,
+                    'is_fee' => $request->has('fee_amount') ? 1 : 0,
+                ]);
+            }
 
             $body = [];
             for ($i=0; $i < sizeof($request->body) ; $i++) { 
@@ -58,37 +73,15 @@ class TransactionController extends Controller
             }
 
             $card = Card::where('id', $request->cards_id)->where('user_id', auth()->user()->id)->first();
-            if($request->has('lending') || $request->has('fee_amount')){
-                $especial = 1;
-            }
 
-            $item = $card->items()->create([
+            $card->items()->create([
                 'title'=> $request->title, 
                 'body' => $body,
                 'amount'=> $request->amount,
-                'especial' => $especial, 
+                'landing_id' => isset($lending) ? $lending->id : null, 
                 'template_id' => $request->template_id,
                 'created_at' => $request->register_Item,
             ]);
-
-            if( $request->has('lending') || $request->has('fee_amount') ){
-                $history_quota = [];
-                if( $request->has('fee_amount')){
-                    for ($i=0; $i < $request->fee_amount ; $i++) { 
-                        array_push($history_quota, [$i , '']);
-                    }
-                }
-                Landing::create([
-                    'item_id' => $item->id,
-                    'state_id' => 3,
-                    'history_quota' =>  empty($history_quota) ? '' : $history_quota ,
-                    'is_lending' => $request->has('lending') ? 1 : 0,
-                    'is_fee' => $request->has('fee_amount') ? 1 : 0,
-                ]);
-            }
-
-
-
 
             $card->update([
                 'amount'=> $card->amount + $request->amount
@@ -428,7 +421,7 @@ class TransactionController extends Controller
                 'title'=> "Transaccion entre Cuentas",
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount * -1,
-                'especial' => 0,
+                'landing_id' => null,
                 'template_id' => 1,
                 'created_at' => $dateNow,
             ]);
@@ -437,7 +430,7 @@ class TransactionController extends Controller
                 'title'=> "Transaccion entre Cuentas",
                 'body' => [["Nombre", "Transaccion entre Cuentas"],["Cuenta Origen", $fromCard->name . " - " . $request->fromCard ],["Cuenta de Destino", $toCard->name . " - " . $request->toCard]],
                 'amount'=> $request->amount,
-                'especial' => 0,
+                'landing_id' => null,
                 'template_id' => 1,
                 'created_at' => $dateNow,
             ]);

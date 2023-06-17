@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('body');
             $table->decimal('amount');
             $table->foreignId('template_id')->nullable()->constrained();
-            $table->integer("especial")->nullable();
+            $table->foreignId("landing_id")->nullable()->constrained();
             $table->timestamps();
         }); 
     }

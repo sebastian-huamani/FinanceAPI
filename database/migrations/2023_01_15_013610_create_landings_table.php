@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('amount')->nullable();
             $table->dateTime('payment_date_lending')->nullable();
             $table->string('debtor')->nullable();
-            $table->foreignId('item_id')->constrained();
             $table->foreignId('state_id')->constrained();
             $table->string('history_quota')->nullable();    
             $table->integer('is_lending')->nullable();    
