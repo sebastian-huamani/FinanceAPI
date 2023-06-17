@@ -143,14 +143,12 @@ class LandingController extends Controller
 
             foreach ($cardsByUser as $card_id) {
                 $card_ins = Card::find($card_id);
-                $items = $card_ins->items()->whereNot('landing_id', null)
-                    ->whereYear('items.created_at', $year)
-                    ->whereMonth('items.created_at', $month)
-                    ->orderby('items.created_at', 'desc')
+                $items = $card_ins->items()->FilterLending($state , $month, $year)
+                    ->select('landings.*', 'items.*')
                     ->get();
 
                 foreach ($items as $item) {
-                    array_push($data, $item);
+                    array_push($data, $item->lendings);
                 }
 
             }

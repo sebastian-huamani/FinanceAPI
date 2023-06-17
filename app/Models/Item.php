@@ -30,26 +30,13 @@ class Item extends Model
         $query->join('landings', 'items.id', 'landings.item_id')->where('landings.state_id', $state_id)->get();
     }
 
-    public static function lendingByEspecialState( int $state_id){
-        $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
-
-        if( !$cards){
-            return -1;
-        }
-
-        $items = [];
-
-        foreach ($cards as $card) {
-            $card_ins = Card::where('id', $card)->first();
-            $items = $card_ins->items()->where('items.especial', 1)->get();
-            foreach ($items as $item) {
-                if($item->especial == 1 && $item->ByState($state_id) ){
-                    array_push($items, $item);
-                }
-            }
-        }
-
-        return $items;
+    public function scopeFilterLending($query, $state , $month, $year){
+            return $query->whereNot('landing_id', null)
+            ->whereYear('items.created_at', $year)
+            ->whereMonth('items.created_at', $month)
+            ->leftjoin('landings', 'items.landing_id', 'landings.id')
+            ->where('landings.state_id', $state )
+            ->orderby('items.created_at', 'desc');
     }
 
     
