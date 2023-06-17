@@ -30,7 +30,7 @@ class Item extends Model
         $query->join('landings', 'items.id', 'landings.item_id')->where('landings.state_id', $state_id)->get();
     }
 
-    public static function lendingByEspecialState(int $especial , int $state_id){
+    public static function lendingByEspecialState( int $state_id){
         $cards = Card::where('user_id', Auth::user()->id)->pluck("id");
 
         if( !$cards){
@@ -41,8 +41,9 @@ class Item extends Model
 
         foreach ($cards as $card) {
             $card_ins = Card::where('id', $card)->first();
-            foreach ($card_ins->items as $item) {
-                if($item->especial == $especial && $item->ByState($state_id) ){
+            $items = $card_ins->items()->where('items.especial', 1)->get();
+            foreach ($items as $item) {
+                if($item->especial == 1 && $item->ByState($state_id) ){
                     array_push($items, $item);
                 }
             }
