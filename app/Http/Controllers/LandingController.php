@@ -69,17 +69,17 @@ class LandingController extends Controller
     {
         try {
             $cardsByUser = Card::where('user_id', Auth::user()->id)->pluck("id");
-            $items = [];
+            $lending = [];
 
             foreach ($cardsByUser as $card_id) {
                 $card_ins = Card::find($card_id);
-                $item = $card_ins->items()->where('items.especial', 1)->get();
-                array_push($items, $item);
+                $item = $card_ins->items()->whereNot('landing_id', null )->get();
+                foreach ($item as $it) {
+                    array_push($lending, $it);
+                }
             }
 
-            // $items = Item::lendingByEspecialState( 3);
-            
-            if($items == -1 ){
+            if(sizeof($lending) == 0 ){
                 return response()->json([
                     'res' => true,
                     'msg' => 'No se encontaron tarjetas', 
@@ -87,7 +87,7 @@ class LandingController extends Controller
             }
             return response()->json([
                 'res' => true,
-                'msg' => $items, 
+                'msg' => $lending, 
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
