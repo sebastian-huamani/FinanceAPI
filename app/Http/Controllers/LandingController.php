@@ -130,6 +130,45 @@ class LandingController extends Controller
         }
     }
 
+    public function filter_lending($state, $card = null, $month, $year) {
+
+        try {
+            $data = [];
+
+            if($card != ''){
+                $cardsByUser = Card::where('id', $card)->pluck("id");
+            }else {
+                $cardsByUser = Card::where('user_id', Auth::user()->id)->pluck("id");
+            }
+
+            foreach ($cardsByUser as $card_id) {
+                $card_ins = Card::find($card_id);
+                $items = $card_ins->items()->whereNot('landing_id', null)
+                    ->whereYear('items.created_at', $year)
+                    ->whereMonth('items.created_at', $month)
+                    ->orderby('items.created_at', 'desc')
+                    ->get();
+
+                foreach ($items as $item) {
+                    array_push($data, $item);
+                }
+
+            }
+            return response()->json([
+                'res' => true,
+                'msg' => $data, 
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'res' => false,
+                'msg' => "Se Ha Producido Un Error",
+                'e' => $e->getMessage()
+            ], 200);
+        }
+        
+
+    }
+
     public function showOne(int $id)
     {
         try {

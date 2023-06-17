@@ -16,5 +16,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/lending/show/{id}', [LandingController::class, 'showOne']);
     Route::post('/lending/updateState/{id}', [LandingController::class, 'updateState']);
     Route::get('/lendings', [TransactionController::class, 'Lendings']);
+    Route::get('/filter/{state}/{card}/{moth}/{year}', [LandingController::class, 'filter_lending']);
     
 });
