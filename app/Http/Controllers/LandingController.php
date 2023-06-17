@@ -135,7 +135,7 @@ class LandingController extends Controller
         try {
 
             // $lending = Landing::where('user_id', auth()->user()->id)->where('id', $id)->first();
-            $lending = Item::where('id', $id)->join('landings', 'items.landing_id', 'landings.id')->get();
+            $lending = Item::where('items.id', $id)->join('landings', 'items.landing_id', 'landings.id')->get();
 
             return response()->json([
                 'res' => true,
