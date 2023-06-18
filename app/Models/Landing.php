@@ -21,4 +21,9 @@ class Landing extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
+
 }

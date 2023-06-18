@@ -22,8 +22,8 @@ class Item extends Model
         return $this->belongsTo(Template::class);
     }
 
-    public function landings() {
-        return $this->hasMany(Landing::class);
+    public function landing() {
+        return $this->hasOne(Landing::class);
     }
 
     public function scopeByState($query, int $state_id) {
