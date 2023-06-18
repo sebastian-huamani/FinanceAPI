@@ -194,17 +194,11 @@ class LandingController extends Controller
             $item = Item::where('landing_id', $id)->first();
             $lending = Landing::find($id);
 
-            if(empty($lending) || sizeof($lending) == 0){
-                return response()->json([
-                    'res' => true,
-                    'msg' => 'No encontrado'
-                ]);
-            }
+            $data = $this->orderItemLending($item, $lending);
 
-            
             return response()->json([
                 'res' => true,
-                'msg' => $this->orderItemLending($item, $lending)
+                'msg' => $data
             ]);
         } catch (\Exception $e) {
             return response()->json([
