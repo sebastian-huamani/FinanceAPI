@@ -148,7 +148,7 @@ class LandingController extends Controller
                     ->get();
 
                 foreach ($items as $item) {
-                    array_push($data, $item->lendings);
+                    array_push($data, $item);
                 }
 
             }
@@ -171,8 +171,14 @@ class LandingController extends Controller
     {
         try {
 
-            // $lending = Landing::where('user_id', auth()->user()->id)->where('id', $id)->first();
             $lending = Item::where('items.id', $id)->join('landings', 'items.landing_id', 'landings.id')->get();
+
+            if(empty($lending)){
+                return response()->json([
+                    'res' => true,
+                    'msg' => 'No encontrado'
+                ]);
+            }
 
             return response()->json([
                 'res' => true,
