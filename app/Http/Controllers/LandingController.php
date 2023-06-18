@@ -191,7 +191,6 @@ class LandingController extends Controller
     public function showOne(int $id)
     {
         try {
-
             $lending = Item::where('items.id', $id)->join('landings', 'items.landing_id', 'landings.id')->get();
 
             if(empty($lending) || sizeof($lending) == 0){

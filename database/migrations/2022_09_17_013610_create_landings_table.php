@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('payment_date_lending')->nullable();
             $table->string('debtor')->nullable();
             $table->foreignId('state_id')->constrained();
-            $table->string('history_quota')->nullable();    
+            $table->json('history_quota')->nullable();    
             $table->integer('is_lending')->nullable();    
             $table->integer('is_fee')->nullable();
             $table->timestamps();

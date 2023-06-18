@@ -55,13 +55,13 @@ class TransactionController extends Controller
                 $history_quota = [];
                 if( $request->has('fee_amount')){
                     for ($i=0; $i < $request->fee_amount ; $i++) { 
-                        array_push($history_quota, [$i , '']);
+                        array_push($history_quota, [$i , ' ']);
                     }
                 } 
                 
                 $lending = Landing::create([
                     'state_id' => 3,
-                    'history_quota' =>  empty($history_quota) ? '' : $history_quota,
+                    'history_quota' =>  empty($history_quota) ? [] : $history_quota,
                     'is_lending' => $request->has('lending') ? 1 : 0,
                     'is_fee' => $request->has('fee_amount') ? 1 : 0,
                 ]);
