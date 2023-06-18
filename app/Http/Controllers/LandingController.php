@@ -73,12 +73,30 @@ class LandingController extends Controller
 
             foreach ($cardsByUser as $card_id) {
                 $card_ins = Card::find($card_id);
-                $item = $card_ins->items()->whereNot('landing_id', null )
+                $items = $card_ins->items()->whereNot('landing_id', null )
                 ->leftjoin('landings', 'items.landing_id', 'landings.id')
                 ->select('landings.*', 'items.*')
                 ->get();
-                foreach ($item as $it) {
-                    array_push($lending, $it);
+                foreach ($items as $item) {
+
+                    $type_lending = [];
+                    if($item['is_lending'] != 0){
+                        array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
+                    }
+                    if($item['is_fee'] != 0){
+                        array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-indigo-200", 'colorSelectedText' => "bg-indigo-800"]);
+                    }
+
+                    $itemOrder = [
+                        'id' => $item['id'],
+                        'title' => $item['title'],
+                        'created_at' => $item['created_at'],
+                        'type_lending' => $type_lending,
+                        'state' => $item['state_id'],
+                        'bank' => $card_ins['name'],
+                    ];
+
+                    array_push($lending, $itemOrder);
                 }
             }
 
