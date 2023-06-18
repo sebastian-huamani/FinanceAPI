@@ -224,6 +224,7 @@ class LandingController extends Controller
             'body' => $item->body,
             'amount_item' => $item->amount,
             'amount_landing' => $landing->amount,
+            'payment_date_lending' => $landing->payment_date_lending,
             'created_at' => $item->created_at,
             'updated_at' => $item->updated_at,
             'state_id ' => $landing->state_id ,
