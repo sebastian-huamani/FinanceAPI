@@ -73,7 +73,10 @@ class LandingController extends Controller
 
             foreach ($cardsByUser as $card_id) {
                 $card_ins = Card::find($card_id);
-                $item = $card_ins->items()->whereNot('landing_id', null )->get();
+                $item = $card_ins->items()->whereNot('landing_id', null )
+                ->leftjoin('landings', 'items.landing_id', 'landings.id')
+                ->select('landings.*', 'items.*')
+                ->get();
                 foreach ($item as $it) {
                     array_push($lending, $it);
                 }
