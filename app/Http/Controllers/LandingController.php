@@ -191,7 +191,8 @@ class LandingController extends Controller
     public function showOne(int $id)
     {
         try {
-            $lending = Item::where('items.id', $id)->join('landings', 'items.landing_id', 'landings.id')->get();
+            $item = Item::where('landing_id', $id)->first();
+            $lending = Landing::find($id);
 
             if(empty($lending) || sizeof($lending) == 0){
                 return response()->json([
@@ -200,9 +201,10 @@ class LandingController extends Controller
                 ]);
             }
 
+            
             return response()->json([
                 'res' => true,
-                'msg' => $lending
+                'msg' => $this->orderItemLending($item, $lending)
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -210,6 +212,32 @@ class LandingController extends Controller
                 'msg' => $e->getMessage()
             ]);
         }
+    }
+
+    public function orderItemLending(Item $item, Landing $landing) {
+
+            $type_lending = [];
+            if($landing['is_lending'] != 0){
+                array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
+            }
+            if($landing['is_fee'] != 0){
+                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-indigo-200", 'colorSelectedText' => "bg-indigo-800"]);
+            }
+
+        $order_list = [
+            'id_item' => $item->id,
+            'id_landing' => $landing->id,
+            'body' => $item->body,
+            'amount_item' => $item->amount,
+            'amount_landing' => $landing->amount,
+            'created_at' => $item->created_at,
+            'updated_at' => $item->updated_at,
+            'state_id ' => $landing->state_id ,
+            'history_quota' => $landing->history_quota,
+            'type_landing' => $type_lending,
+        ];
+
+        return $order_list;
     }
 
     public function edit(Request $request)

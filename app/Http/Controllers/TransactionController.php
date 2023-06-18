@@ -52,7 +52,7 @@ class TransactionController extends Controller
             if( $request->has('lending') || $request->has('fee_amount') ){
                 if( $request->has('fee_amount')){
                     for ($i=0; $i < $request->fee_amount ; $i++) { 
-                        array_push($history_quota, [$i , $i]);
+                        array_push($history_quota, [$i , '']);
                     }
                 } 
                 
