@@ -194,7 +194,7 @@ class LandingController extends Controller
 
             $lending = Item::where('items.id', $id)->join('landings', 'items.landing_id', 'landings.id')->get();
 
-            if(empty($lending)){
+            if(empty($lending) || sizeof($lending) == 0){
                 return response()->json([
                     'res' => true,
                     'msg' => 'No encontrado'
