@@ -94,6 +94,7 @@ class LandingController extends Controller
                         'type_lending' => $type_lending,
                         'state' => $item['state_id'],
                         'bank' => $card_ins['name'],
+                        'lending_id' => $item['landing_id']
                     ];
 
                     array_push($lending, $itemOrder);
