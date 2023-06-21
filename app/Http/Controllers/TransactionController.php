@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ItemRequest;
 use App\Http\Requests\TransactionCardsRequest;
+use App\Http\Requests\TransactionRequest;
 use App\Models\Card;
 use App\Models\DataInfoUser;
 use App\Models\Item;
@@ -43,7 +44,7 @@ class TransactionController extends Controller
         }
     }
 
-    public function createItemCount(Request $request)
+    public function createItemCount(TransactionRequest $request)
     {
         DB::beginTransaction();
 
@@ -63,7 +64,7 @@ class TransactionController extends Controller
                     'history_quota' => $history_quota,
                     'is_lending' => $request->has('lending') ? 1 : 0,
                     'is_fee' => $request->has('fee_amount') ? 1 : 0,
-                    'debtor' => $request->has('lending') ? $request->lending : 0,
+                    'debtor' => $request->has('lending') ? $request->lending : null,
                 ]);
             }
 
