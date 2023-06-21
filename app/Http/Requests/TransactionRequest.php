@@ -34,8 +34,12 @@ class TransactionRequest extends FormRequest
             "cards_id" => "required|exists:App\Models\Card,id",
             "template_id" => "required|exists:App\Models\Template,id",
             "register_Item" => "required"
-
-
         ];
+    }
+
+    public function messages(){
+        return [
+            'register_Item.required' => "El :attribute es requerido"
+        ]
     }
 }
