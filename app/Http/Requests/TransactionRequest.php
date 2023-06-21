@@ -26,7 +26,7 @@ class TransactionRequest extends FormRequest
         return [
             "fee_amount" => "sometimes|integer",
             "lending" => "sometimes|string",
-            "amount" => "required|decimal:0,2",
+            "amount" => "required|numeric",
             "title" => "required|string",
             "body" => "required",
             "template" => "required",
