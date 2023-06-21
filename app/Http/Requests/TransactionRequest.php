@@ -31,8 +31,8 @@ class TransactionRequest extends FormRequest
             "body" => "required",
             "template" => "required",
             "type" => "required",
-            "cards_id" => "required|App\Models\Card,id",
-            "template_id" => "required|App\Models\Template,id",
+            "cards_id" => "required|exists:App\Models\Card,id",
+            "template_id" => "required|exists:App\Models\Template,id",
             "register_Item" => "required"
 
 
