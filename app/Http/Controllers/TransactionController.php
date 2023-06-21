@@ -51,8 +51,10 @@ class TransactionController extends Controller
             $history_quota = [];
             if( $request->has('lending') || $request->has('fee_amount') ){
                 if( $request->has('fee_amount')){
+                    $mount = $request->amount < 0 ? $request->amount * -1 :  $request->amount;
+                    $avg = round($mount / $request->fee_amount, 2);
                     for ($i=0; $i < $request->fee_amount ; $i++) { 
-                        array_push($history_quota, [$i , '']);
+                        array_push($history_quota, [$i , $avg]);
                     }
                 } 
                 
@@ -61,6 +63,7 @@ class TransactionController extends Controller
                     'history_quota' => $history_quota,
                     'is_lending' => $request->has('lending') ? 1 : 0,
                     'is_fee' => $request->has('fee_amount') ? 1 : 0,
+                    'debtor' => $request->has('lending') ? $request->lending : 0,
                 ]);
             }
 
