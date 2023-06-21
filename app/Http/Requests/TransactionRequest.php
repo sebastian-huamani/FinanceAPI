@@ -40,6 +40,6 @@ class TransactionRequest extends FormRequest
     public function messages(){
         return [
             'register_Item.required' => "El :attribute es requerido"
-        ]
+        ];
     }
 }
