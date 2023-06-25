@@ -55,7 +55,21 @@ class TransactionController extends Controller
                     $mount = $request->amount < 0 ? $request->amount * -1 :  $request->amount;
                     $avg = round($mount / $request->fee_amount, 2);
                     for ($i=0; $i < $request->fee_amount ; $i++) { 
-                        array_push($history_quota, [$i , $avg]);
+                        $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
+                        if($request->type_date_payment == 1){
+                            $dateNow->addMonth();
+                            $lastday = date("Y-m-t", strtotime($dateNow->toDateString()));   
+                            $date_f = Carbon::createFromFormat('Y-m-d', $lastday);
+                        }
+                        if($request->type_date_payment == 2){
+                            $dateNow->addMonth();
+                            $date_f = Carbon::createFromFormat('Y-m-d',  $dateNow->year . '-' . $dateNow->month .  '-01');
+                        }
+                        if($request->type_date_payment == 3){
+                            $date_f = Carbon::createFromFormat('Y-m-d',  $request->date_payment_especial);
+                        }
+                        array_push($history_quota, [$i , $avg, $date_f, 2]);
+                        $date_f->addMonths($i);
                     }
                 } 
                 
