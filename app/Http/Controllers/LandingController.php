@@ -196,7 +196,8 @@ class LandingController extends Controller
             $lending = Landing::find($id);
 
             $data = $this->orderItemLending($item, $lending);
-
+            $lending->history_quota;
+            $this->updatingState($lending->history_quota);
             return response()->json([
                 'res' => true,
                 'msg' => $data
@@ -239,11 +240,19 @@ class LandingController extends Controller
 
     public function edit(Request $request)
     {
+        return $request->all();
         DB::beginTransaction();
         try {
-            $lending = Landing::where('user_id', auth()->user()->id)->where('id', $request->id)->first();
+            $history_quota = [];
+            for ($i=0; $i < sizeof($request->type_state_payment) ; $i++) { 
+                array_push($history_quota, [$i, $request->amountxMonth[$i], $request->date_pay[$i], $request->type_state_payment[$i]]);
+            }
+
+            $item = Item::where('id', $request->id)->first();
+            $lending = Landing::where('id', $item->landing_id)->first();
             $card = Card::where('id', $lending->card_id)->first();
-            $lendingLastAmount = $lending->amount;
+
+            $lendingLastAmount = $lending->amount > 0 ? $lending->amount : $lending->amount * -1;
             
             if($request->amount > $card->amount) {
                 DB::commit();
@@ -253,12 +262,16 @@ class LandingController extends Controller
                     'lending' => $lending
                 ], 200);
             }
-            
+            $item->update([
+                'amount' => $request->amount
+            ]);
+
             $lending->update([
                 'debtor' => $request->debtor,
                 'amount' => $request->amount,
-                'created_date_lending' => $request->created_date_lending,
                 'payment_date_lending' => $request->payment_date_lending,
+                'history_quota' => $history_quota,
+                'updated_at' => Carbon::now(new DateTimeZone('America/Lima')),
             ]);
             
             $card->update([
