@@ -247,10 +247,10 @@ class LandingController extends Controller
             for ($i=0; $i < sizeof($request->type_state_payment) ; $i++) { 
                 $value += $request->amountxMonth[$i];
                 if ($request->amountxMonth[$i] == '' || $request->amountxMonth[$i] < 0 ){
-                    return response()->json(['res' => false, 'La cuota ' . $i + 1 . ' esta vacia']);
+                    return response()->json(['res' => false, 'msg' => 'La cuota ' . $i + 1 . ' esta vacia']);
                 }
                 if($request->date_pay[$i] == '' || $request->date_pay[$i] == null){
-                    return response()->json(['res' => false, 'La Fecha de la columna ' . $i + 1 . ' esta vacia']);
+                    return response()->json(['res' => false, 'msg' => 'La Fecha de la columna ' . $i + 1 . ' esta vacia']);
                 }
                 array_push($history_quota, [$i, $request->amountxMonth[$i], $request->date_pay[$i], $request->type_state_payment[$i]]);
             }
@@ -275,7 +275,7 @@ class LandingController extends Controller
                     'lending' => $lending
                 ], 200);
             }
-            
+
             $item->update([
                 'amount' => $request->amount
             ]);
