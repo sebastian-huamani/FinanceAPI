@@ -197,7 +197,7 @@ class LandingController extends Controller
 
             $data = $this->orderItemLending($item, $lending);
             $lending->history_quota;
-            $this->updatingState($lending->history_quota);
+            // $this->updatingState($lending->history_quota);
             return response()->json([
                 'res' => true,
                 'msg' => $data
@@ -240,21 +240,34 @@ class LandingController extends Controller
 
     public function edit(Request $request)
     {
-        return $request->all();
         DB::beginTransaction();
         try {
+            $value = 0;
             $history_quota = [];
             for ($i=0; $i < sizeof($request->type_state_payment) ; $i++) { 
+                $value += $request->amountxMonth[$i];
+                if ($request->amountxMonth[$i] == '' || $request->amountxMonth[$i] < 0 ){
+                    return response()->json(['res' => false, 'La cuota ' . $i + 1 . ' esta vacia']);
+                }
+                if($request->date_pay[$i] == '' || $request->date_pay[$i] == null){
+                    return response()->json(['res' => false, 'La Fecha de la columna ' . $i + 1 . ' esta vacia']);
+                }
                 array_push($history_quota, [$i, $request->amountxMonth[$i], $request->date_pay[$i], $request->type_state_payment[$i]]);
+            }
+
+            $newAmount = $request->amount > 0 ? $request->amount : $request->amount * -1;
+
+            if($value != $newAmount){
+                return response()->json(['res' => false, 'msg' => 'las suma de las cuotas no coinciden con el monto'], 200);
             }
 
             $item = Item::where('id', $request->id)->first();
             $lending = Landing::where('id', $item->landing_id)->first();
-            $card = Card::where('id', $lending->card_id)->first();
+            $card = Card::where('id', $item->cards->first()->id)->first();
 
-            $lendingLastAmount = $lending->amount > 0 ? $lending->amount : $lending->amount * -1;
-            
-            if($request->amount > $card->amount) {
+            $lendingLastAmount = $item->amount;
+
+            if($newAmount > $card->amount) {
                 DB::commit();
                 return response()->json([
                     'res' => false,
@@ -262,20 +275,20 @@ class LandingController extends Controller
                     'lending' => $lending
                 ], 200);
             }
+            
             $item->update([
                 'amount' => $request->amount
             ]);
 
             $lending->update([
                 'debtor' => $request->debtor,
-                'amount' => $request->amount,
                 'payment_date_lending' => $request->payment_date_lending,
                 'history_quota' => $history_quota,
                 'updated_at' => Carbon::now(new DateTimeZone('America/Lima')),
             ]);
             
             $card->update([
-                'amount' => ($card->amount + $lendingLastAmount) - $request->amount
+                'amount' => ($card->amount + $request->amount) - $lendingLastAmount
             ]);
             
             DB::commit();
