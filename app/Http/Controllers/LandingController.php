@@ -217,7 +217,7 @@ class LandingController extends Controller
                 array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
             }
             if($landing['is_fee'] != 0){
-                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-indigo-200", 'colorSelectedText' => "bg-indigo-800"]);
+                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "bg-blue-900"]);
             }
 
         $order_list = [
@@ -246,7 +246,7 @@ class LandingController extends Controller
             $history_quota = [];
             for ($i=0; $i < sizeof($request->type_state_payment) ; $i++) { 
                 $value += $request->amountxMonth[$i];
-                if ($request->amountxMonth[$i] == '' || $request->amountxMonth[$i] < 0 ){
+                if ($request->amountxMonth[$i] == '' || $request->amountxMonth[$i] <= 0 ){
                     return response()->json(['res' => false, 'msg' => 'La cuota ' . $i + 1 . ' esta vacia']);
                 }
                 if($request->date_pay[$i] == '' || $request->date_pay[$i] == null){

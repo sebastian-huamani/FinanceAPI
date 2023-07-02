@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         User::factory(1)->create();
+
         State::factory(1)->create([
             'name' => 'Activo'
         ]);
@@ -32,6 +33,12 @@ class DatabaseSeeder extends Seeder
         ]);
         State::factory(1)->create([
             'name' => 'Pendiente'
+        ]);
+        State::factory(1)->create([
+            'name' => 'Pagado'
+        ]);
+        State::factory(1)->create([
+            'name' => 'No Pagado'
         ]);
 
         Template::factory(1)->create();
