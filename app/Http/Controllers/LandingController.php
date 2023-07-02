@@ -84,7 +84,7 @@ class LandingController extends Controller
                         array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
                     }
                     if($item['is_fee'] != 0){
-                        array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-indigo-200", 'colorSelectedText' => "bg-indigo-800"]);
+                        array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
                     }
 
                     $itemOrder = [
@@ -217,7 +217,7 @@ class LandingController extends Controller
                 array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
             }
             if($landing['is_fee'] != 0){
-                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "bg-blue-900"]);
+                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
             }
 
         $order_list = [
