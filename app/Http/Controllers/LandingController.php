@@ -238,20 +238,22 @@ class LandingController extends Controller
         try {
             $value = 0;
             $history_quota = [];
-            for ($i=0; $i < sizeof($request->type_state_payment) ; $i++) { 
-                $value += $request->amountxMonth[$i];
-                if ($request->amountxMonth[$i] == '' || $request->amountxMonth[$i] <= 0 ){
-                    return response()->json(['res' => false, 'msg' => 'La cuota ' . $i + 1 . ' esta vacia']);
+            if($request->has('type_state_payment')){
+                for ($i=0; $i < sizeof($request->type_state_payment) ; $i++) { 
+                    $value += $request->amountxMonth[$i];
+                    if ($request->amountxMonth[$i] == '' || $request->amountxMonth[$i] <= 0 ){
+                        return response()->json(['res' => false, 'msg' => 'La cuota ' . $i + 1 . ' esta vacia']);
+                    }
+                    if($request->date_pay[$i] == '' || $request->date_pay[$i] == null){
+                        return response()->json(['res' => false, 'msg' => 'La Fecha de la columna ' . $i + 1 . ' esta vacia']);
+                    }
+                    array_push($history_quota, [$i, $request->amountxMonth[$i], $request->date_pay[$i], $request->type_state_payment[$i]]);
                 }
-                if($request->date_pay[$i] == '' || $request->date_pay[$i] == null){
-                    return response()->json(['res' => false, 'msg' => 'La Fecha de la columna ' . $i + 1 . ' esta vacia']);
-                }
-                array_push($history_quota, [$i, $request->amountxMonth[$i], $request->date_pay[$i], $request->type_state_payment[$i]]);
             }
 
             $newAmount = $request->amount > 0 ? $request->amount : $request->amount * -1;
 
-            if($value != $newAmount){
+            if($value != $newAmount && $value != 0){
                 return response()->json(['res' => false, 'msg' => 'las suma de las cuotas no coinciden con el monto'], 200);
             }
 
