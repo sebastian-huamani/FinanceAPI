@@ -28,7 +28,7 @@ class CardController extends Controller
                 'name_banck' => $request->name_banck,
                 'card_expiration_date' => $request->card_expiration_date,
                 'type_card_id' => 1,
-                'date_cards_id' => null,
+                'date_card_id' => null,
                 'state_id' => 1,
                 'user_id' => auth()->user()->id,
                 'color_id' => 1,
@@ -182,11 +182,11 @@ class CardController extends Controller
             $card->name_banck = $request->name_banck;
             $card->card_expiration_date = $request->card_expiration_date;
             $card->color_id = $request->color;
+            $card->bottom_line = $card->date_card_id != null ? $request->bottom_line : '0';
             $card->updated_at = Carbon::now(new DateTimeZone('America/Lima'));
             $card->save();
             
-            if ($card->date_cards_id != null) {
-                $card->bottom_line = $request->bottom_line;
+            if ($card->date_card_id != null) {
                 $dateCard = DateCard::where('id', $card->date_card_id)->first();
                 $dateCard->billing_cycle = $request->billing_cycle;
                 $dateCard->closing_date = $request->closing_date;
