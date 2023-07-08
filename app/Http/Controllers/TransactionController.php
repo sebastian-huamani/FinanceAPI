@@ -152,12 +152,9 @@ class TransactionController extends Controller
             $dateNow = Carbon::now(new DateTimeZone('America/Lima'));
             $user = User::find(auth()->user()->id);
             
-            $dataLandings = $user->landings()
-            ->join('states', 'landings.state_id', '=', 'states.id')
-            ->where('landings.state_id', 1)
-            ->get();
+            $dataLandings = Landing::getSumActives();
 
-            $totalLendings = round($dataLandings->sum("amount"), 2);
+            $totalLendings = round($dataLandings, 2);
             $creditLineTotal = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
             $creditAmountTotal = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
             $debitTotal = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
@@ -182,7 +179,7 @@ class TransactionController extends Controller
                 'aviable_credit' => array($creditAmountTotal, $aviableCreditPorcent),
                 'full_debit' => array($debitTotal, $fullDebitPorcent),
                 'aviable_debit' => array( round($debitAmountTotal, 2), $aviableDebitPorcent),
-                // 'full_lending' => array($totalLendings, 0),
+                'full_lending' => array($totalLendings, 0),
             );
 
             return response()->json([
