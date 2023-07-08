@@ -87,13 +87,13 @@ class LandingController extends Controller
     {
         try {
             $lendings = Landing::where('user_id', auth()->user()->id)
-                ->join('states', 'landings.state_id', '=', 'states.id')
-                ->where('state_id', 2)
+                ->join('states',  'states.id', 'landings.state_id')
+                ->where('landings.state_id', 1)
                 ->whereYear('landings.created_at', $request->year)
                 ->whereMonth('landings.created_at', $request->month)
-                ->select('landings.id', 'landings.amount', 'landings.created_date_lending', 'landings.payment_date_lending', 'landings.debtor', 'states.name as state', 'landings.created_at', 'landings.updated_at', 'landings.card_id', 'landings.type_lending')
+                ->select('landings.id', 'landings.amount', 'landings.created_date_lending', 'landings.payment_date_lending', 'landings.debtor', 'states.name', 'landings.created_at', 'landings.updated_at', 'landings.card_id', 'landings.type_lending')
                 ->get();
-
+            
             if (sizeof($lendings) == 0) {
                 return response()->json([
                     'res' => true,
