@@ -101,12 +101,6 @@ class LandingController extends Controller
                 }
             }
 
-            if(sizeof($lending) == 0 ){
-                return response()->json([
-                    'res' => true,
-                    'msg' => 'No se encontaron tarjetas', 
-                ], 200);
-            }
             return response()->json([
                 'res' => true,
                 'msg' => $lending, 
