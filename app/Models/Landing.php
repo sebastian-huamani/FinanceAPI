@@ -27,43 +27,42 @@ class Landing extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public static function getLendingsByState(int $state){
-        $cardsByUser = Card::where('user_id', Auth::user()->id)->pluck("id");
+    public function Order($items): array{
         $lending = [];
+        foreach ($items as $item) {
 
-        foreach ($cardsByUser as $card_id) {
-            $card_ins = Card::find($card_id);
-            $items = $card_ins->items()->whereNot('landing_id', null )
-            ->leftjoin('landings', 'items.landing_id', 'landings.id')
-            ->where('landings.state_id', $state )
-            ->select('landings.*', 'items.*')
-            ->get();
-            foreach ($items as $item) {
-
-                $type_lending = [];
-                if($item['is_lending'] != 0){
-                    array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
-                }
-                if($item['is_fee'] != 0){
-                    array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
-                }
-
-                $itemOrder = [
-                    'id' => $item['id'],
-                    'title' => $item['title'],
-                    'amount' => $item['amount'],
-                    'created_at' => $item['created_at'],
-                    'type_lending' => $type_lending,
-                    'state' => $item['state_id'],
-                    'bank' => $card_ins['name'],
-                    'lending_id' => $item['landing_id']
-                ];
-
-                array_push($lending, $itemOrder);
+            $type_lending = [];
+            if($item['is_lending'] != 0){
+                array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
             }
+            if($item['is_fee'] != 0){
+                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
+            }
+
+            $itemOrder = [
+                'id' => $item['id'],
+                'title' => $item['title'],
+                'amount' => $item['amount'],
+                'created_at' => $item['created_at'],
+                'type_lending' => $type_lending,
+                'state' => $item['state_id'],
+                'bank' => $item['card_name'],
+                'lending_id' => $item['landing_id']
+            ];
+
+            array_push($lending, $itemOrder);
         }
 
         return $lending;
+    }
+    
+    public static function getLendingsByState(array $state){
+        
+        return  Landing::join('cards', 'landings.card_id', 'cards.id')
+        ->join('items', 'items.landing_id', 'landings.id')
+        ->where('cards.user_id', Auth::user()->id)
+        ->whereIn('landings.state_id', $state )
+        ->select('landings.*', 'items.*', 'cards.name as card_name');
     }  
 
     public static function getSumActives(){

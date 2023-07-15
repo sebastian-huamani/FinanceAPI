@@ -74,7 +74,7 @@ class TransactionController extends Controller
                 } 
                 
                 $lending = Landing::create([
-                    'state_id' => 3,
+                    'state_id' => 1,
                     'amount' => $request->amount,
                     'history_quota' => $history_quota,
                     'is_lending' => $request->has('lending') ? 1 : 0,

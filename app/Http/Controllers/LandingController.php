@@ -68,11 +68,14 @@ class LandingController extends Controller
     public function showAllActives()
     {
         try {
-            $lending = Landing::getLendingsByState(1);
+            $lendings = Landing::getLendingsByState([1,3])->get();
            
+            $items = new Landing();
+            $items = $items->Order($lendings);
+            
             return response()->json([
                 'res' => true,
-                'msg' => $lending, 
+                'msg' => $items, 
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -86,26 +89,19 @@ class LandingController extends Controller
     public function showAllDesactives(Request $request)
     {
         try {
-            $lendings = Landing::where('user_id', auth()->user()->id)
-                ->join('states',  'states.id', 'landings.state_id')
-                ->where('landings.state_id', 1)
-                ->whereYear('landings.created_at', $request->year)
-                ->whereMonth('landings.created_at', $request->month)
-                ->select('landings.id', 'landings.amount', 'landings.created_date_lending', 'landings.payment_date_lending', 'landings.debtor', 'states.name', 'landings.created_at', 'landings.updated_at', 'landings.card_id', 'landings.type_lending')
-                ->get();
-            
-            if (sizeof($lendings) == 0) {
-                return response()->json([
-                    'res' => true,
-                    'data' => null,
-                    'msg' => "No se encontraron datos en este mes",
-                ], 200);
-            }
+            $lendings = Landing::getLendingsByState([2])
+            ->whereYear('landings.created_at', $request->year)
+            ->whereMonth('landings.created_at', $request->month)
+            ->get();
+
+            $items = new Landing();
+            $items = $items->Order($lendings);
 
             return response()->json([
                 'res' => true,
-                'msg' => $lendings,
+                'msg' => $items,
             ], 200);
+
         } catch (\Exception $e) {
             return response()->json([
                 'res' => false,
