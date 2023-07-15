@@ -27,7 +27,7 @@ class Landing extends Model
         return $this->belongsTo(Item::class);
     }
 
-    public static function getActives(){
+    public static function getLendingsByState(int $state){
         $cardsByUser = Card::where('user_id', Auth::user()->id)->pluck("id");
         $lending = [];
 
@@ -35,6 +35,7 @@ class Landing extends Model
             $card_ins = Card::find($card_id);
             $items = $card_ins->items()->whereNot('landing_id', null )
             ->leftjoin('landings', 'items.landing_id', 'landings.id')
+            ->where('landings.state_id', $state )
             ->select('landings.*', 'items.*')
             ->get();
             foreach ($items as $item) {

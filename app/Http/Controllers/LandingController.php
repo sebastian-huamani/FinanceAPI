@@ -68,7 +68,7 @@ class LandingController extends Controller
     public function showAllActives()
     {
         try {
-            $lending = Landing::getActives();
+            $lending = Landing::getLendingsByState(1);
            
             return response()->json([
                 'res' => true,
@@ -288,8 +288,7 @@ class LandingController extends Controller
 
             return response()->json([
                 'res' => true,
-                'msg' => 'Prestamo Finalizado',
-                'lending' => $lending
+                'msg' => 'Se Actualizo el Prestamo a Finalizado',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
