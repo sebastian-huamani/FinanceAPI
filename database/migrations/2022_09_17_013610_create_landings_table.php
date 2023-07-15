@@ -22,6 +22,7 @@ return new class extends Migration
             $table->json('history_quota')->nullable();    
             $table->integer('is_lending')->nullable();    
             $table->integer('is_fee')->nullable();
+            $table->foreignId('card_id')->constrained();
             $table->timestamps();
         });
     }

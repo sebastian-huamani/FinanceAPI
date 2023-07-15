@@ -79,6 +79,7 @@ class TransactionController extends Controller
                     'is_lending' => $request->has('lending') ? 1 : 0,
                     'is_fee' => $request->has('fee_amount') ? 1 : 0,
                     'debtor' => $request->has('lending') ? $request->lending : null,
+                    'card_id' => $request->cards_id,
                 ]);
             }
 

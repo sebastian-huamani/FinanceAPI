@@ -276,12 +276,12 @@ class LandingController extends Controller
     {   
         DB::beginTransaction();
         try {
-            $lending = Landing::where('user_id', auth()->user()->id)->where('id', $id)->first();
+            $lending = Landing::where('id', $id)->first();
             $lending->update(['state_id' => 2]);
 
             $card = Card::where('id', $lending->card_id)->where('user_id', auth()->user()->id)->first();
             $card->update([
-                'amount'=> $card->amount + $lending->amount
+                'amount'=> $card->amount + ($lending->amount * -1)
             ]);
 
             DB::commit();
