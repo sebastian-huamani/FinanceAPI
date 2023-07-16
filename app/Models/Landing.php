@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +30,8 @@ class Landing extends Model
     }
 
     public function Order($items): array{
+        date_default_timezone_set('America/Lima');
+
         $lending = [];
         foreach ($items as $item) {
 
@@ -39,6 +43,14 @@ class Landing extends Model
                 array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
             }
 
+            if($item['payment_date_lending'] == null){
+                $data = false;
+            }else{
+                $date_payment  = Carbon::create($item['payment_date_lending'])->format('Y-m-d');
+                $dateNow = date('Y-m-d');
+                $data = $dateNow > $date_payment;
+            }
+
             $itemOrder = [
                 'id' => $item['id'],
                 'title' => $item['title'],
@@ -47,7 +59,8 @@ class Landing extends Model
                 'type_lending' => $type_lending,
                 'state' => $item['state_id'],
                 'bank' => $item['card_name'],
-                'lending_id' => $item['landing_id']
+                'lending_id' => $item['landing_id'],
+                'finish_time' => $data
             ];
 
             array_push($lending, $itemOrder);

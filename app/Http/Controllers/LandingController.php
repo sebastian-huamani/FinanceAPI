@@ -171,13 +171,13 @@ class LandingController extends Controller
 
     public function orderItemLending(Item $item, Landing $landing) {
 
-            $type_lending = [];
-            if($landing['is_lending'] != 0){
-                array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
-            }
-            if($landing['is_fee'] != 0){
-                array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
-            }
+        $type_lending = [];
+        if($landing['is_lending'] != 0){
+            array_push($type_lending, ['title' => 'Prestamo', 'colorSelected' => "bg-green-200", 'colorSelectedText' => "text-green-900"]);
+        }
+        if($landing['is_fee'] != 0){
+            array_push($type_lending, ['title' => 'Cuotas', 'colorSelected' => "bg-blue-300", 'colorSelectedText' => "text-blue-900"]);
+        }
 
         $order_list = [
             'id_item' => $item->id,
