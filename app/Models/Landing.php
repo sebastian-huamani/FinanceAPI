@@ -79,25 +79,7 @@ class Landing extends Model
     }  
 
     public static function getSumActives(){
-        $total = 0;
-        $cardsByUser = Card::where('user_id', Auth::user()->id)->pluck("id");
-        $lending = [];
-
-        foreach ($cardsByUser as $card_id) {
-            $card_ins = Card::find($card_id);
-            $items = $card_ins->items()->whereNot('landing_id', null )
-            ->leftjoin('landings', 'items.landing_id', 'landings.id')
-            ->select('landings.*', 'items.*')
-            ->get();
-            foreach ($items as $item) {
-                if($item['state_id'] != 2){
-                    $total += $item['amount'];
-                }
-
-            }
-        }
-
-        return $total;
+        return Self::getLendingsByState([1])->sum('landings.amount');
     }  
 
 }
