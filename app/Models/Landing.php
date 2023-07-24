@@ -56,6 +56,7 @@ class Landing extends Model
                 'title' => $item['title'],
                 'amount' => $item['amount'],
                 'created_at' => $item['created_at'],
+                'debtor' => $item['debtor'],
                 'type_lending' => $type_lending,
                 'state' => $item['state_id'],
                 'bank' => $item['card_name'],

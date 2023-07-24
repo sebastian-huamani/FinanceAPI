@@ -17,5 +17,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/transactions/{month}/{year}', [ AuthController::class, 'trasactionMothYear']);
     Route::get('/transactions/{from}/{to}/data', [ AuthController::class, 'transactionsFromTo']);
     Route::get('/flowMoney/{date}', [ DashboarController::class, 'general']);
-    Route::get('/dataMonthTemplate/{date}', [ DashboarController::class, 'dataxMonthTemplate']);
+    Route::get('/dataMonthTemplate/{date}/{type_card}', [ DashboarController::class, 'dataxMonthTemplate']);
 });
