@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Card;
 use App\Models\Landing;
 use App\Models\User;
+use Carbon\Carbon;
+use DateTimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,29 +14,35 @@ class DashboarController extends Controller
 {
     public function general($date)
     {
-        $date = explode("-", $date);
+        date_default_timezone_set('America/Lima');
+
+        $dateYm = explode("-", $date);
         $user = User::find(Auth::user()->id);
-        $cards = Card::where('user_id', $user->id)->where('state_id', 1)->pluck("id");
+        $cards = Card::where('user_id', $user->id)->where('state_id', 1)->where('type_card_id', 1)->pluck("id");
 
         $listItems = array();
         foreach ($cards as $card) {
             $card_temp = Card::find($card);
             $items_temp = $card_temp->items()
-                ->whereYear('items.created_at', $date[0])
-                ->whereMonth('items.created_at', $date[1])
+                ->whereYear('items.created_at', $dateYm[0])
+                ->whereMonth('items.created_at', $dateYm[1])
                 ->orderby('items.created_at', 'asc')
                 ->selectRaw("date_format(items.created_at, '%Y-%m-%d') as fecha, items.amount as mount")->get();
 
             $data = $items_temp->mapToGroups(function ($item, $key) {
                 return [$item['fecha'] => $item['mount']];
             })->toArray();
-
+            
             $processItems = [];
             $sumTotal = 0;
             foreach ($data as $key => $value) {
-                $sumTotal += round(array_sum($value), 2);
-                $item = array('x' => $key, 'y' => round($sumTotal, 2));
-                array_push($processItems, $item);
+                $item = array('x' => $key, 'y' =>  round($card_temp->amount - array_sum($value), 2));
+                if(strtotime($key) != strtotime(date('Y-m-d'))){
+                    array_push($processItems, $item);
+                }
+            }
+            if($date == date('Y-m')){
+                array_push($processItems, array('x' => date('Y-m-d'), 'y' => round($card_temp->amount, 2)));
             }
             array_push($listItems, array('name' => $card_temp->name, 'data' => $processItems));
             // array_push($listItems,$data);
@@ -50,11 +58,20 @@ class DashboarController extends Controller
         $date = explode("-", $date);
 
         if($type_card == 3){
-            $lendings = Landing::getLendingsByState([1,3])->pluck('amount', 'debtor')->get();
+            $lendings = Landing::getLendingsByState([1,3])->get();
+            $items = new Landing();
+            $sumLendings = Landing::getSumActives();
+
+            $series = [];
+            $labels = [];
+            foreach ($lendings as $lending) {
+                array_push($series, $lending['amount'] > 0 ? $lending['amount'] : $lending['amount'] * -1  );
+                array_push($labels, $lending['debtor']);
+            }
             
             return response()->json([
                 'res' => true,
-                'msg' => $lendings
+                'msg' => [$labels, $series, $sumLendings]
             ]);
         }
 
@@ -67,6 +84,7 @@ class DashboarController extends Controller
         if($type_card == 1){
             $dataLandings = Landing::getSumActives();
             $totalLendings = round($dataLandings, 2);
+            
             $totalAmount = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
             $currentAmount = round($totalAmount, 2) - round($totalLendings, 2);
         } 
@@ -105,7 +123,7 @@ class DashboarController extends Controller
 
 
         $series = array_keys($datas);
-        $labels = array_map(fn($e) => array_sum($e) ,array_values($datas));
+        $labels = array_map(fn($e) => round(array_sum($e), 2) ,array_values($datas));
 
         return response()->json([
             'res' => true,
