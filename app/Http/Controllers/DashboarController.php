@@ -32,16 +32,16 @@ class DashboarController extends Controller
             $data = $items_temp->mapToGroups(function ($item, $key) {
                 return [$item['fecha'] => $item['mount']];
             })->toArray();
-            
+
             $processItems = [];
             $sumTotal = 0;
             foreach ($data as $key => $value) {
                 $item = array('x' => $key, 'y' =>  round($card_temp->amount - array_sum($value), 2));
-                if(strtotime($key) != strtotime(date('Y-m-d'))){
+                if (strtotime($key) != strtotime(date('Y-m-d'))) {
                     array_push($processItems, $item);
                 }
             }
-            if($date == date('Y-m')){
+            if ($date == date('Y-m')) {
                 array_push($processItems, array('x' => date('Y-m-d'), 'y' => round($card_temp->amount, 2)));
             }
             array_push($listItems, array('name' => $card_temp->name, 'data' => $processItems));
@@ -54,21 +54,37 @@ class DashboarController extends Controller
         ]);
     }
 
-    public function dataxMonthTemplate($date, $type_card){
+    public function dataxMonthTemplate($date, $type_card)
+    {
         $date = explode("-", $date);
 
-        if($type_card == 3){
-            $lendings = Landing::getLendingsByState([1,3])->get();
-            $items = new Landing();
+        if ($type_card == 3) {
+            $lendings = Landing::getLendingsByState([1, 3])->where('landings.amount', '<', '0')->get();
             $sumLendings = Landing::getSumActives();
+            $series = [];
+            $labels = [];
+            foreach ($lendings as $lending) {
+                array_push($series, $lending['amount'] * -1);
+                array_push($labels, $lending['debtor']);
+            }
+
+            return response()->json([
+                'res' => true,
+                'msg' => [$labels, $series, $sumLendings]
+            ]);
+        }
+
+        if ($type_card == 4) {
+            $lendings = Landing::getLendingsByState([1, 3])->where('landings.amount', '>', '0')->get();
+            $sumLendings = Landing::getLendingsByState([1, 3])->where('landings.amount', '>', '0')->sum('landings.amount');
 
             $series = [];
             $labels = [];
             foreach ($lendings as $lending) {
-                array_push($series, $lending['amount'] > 0 ? $lending['amount'] : $lending['amount'] * -1  );
+                array_push($series, $lending['amount']);
                 array_push($labels, $lending['debtor']);
             }
-            
+
             return response()->json([
                 'res' => true,
                 'msg' => [$labels, $series, $sumLendings]
@@ -81,15 +97,15 @@ class DashboarController extends Controller
         $totalAmount = 0;
         $currentAmount = 0;
 
-        if($type_card == 1){
+        if ($type_card == 1) {
             $dataLandings = Landing::getSumActives();
             $totalLendings = round($dataLandings, 2);
-            
+
             $totalAmount = $user->cards()->where('cards.type_card_id', 1)->sum("amount");
             $currentAmount = round($totalAmount, 2) - round($totalLendings, 2);
-        } 
- 
-        if($type_card == 2){
+        }
+
+        if ($type_card == 2) {
             $totalAmount = $user->cards()->where('cards.type_card_id', 2)->sum("bottom_line");
             $currentAmount = $user->cards()->where('cards.type_card_id', 2)->sum("amount");
         }
@@ -102,28 +118,28 @@ class DashboarController extends Controller
             $items_temp = $card_temp->items()
                 ->whereYear('items.created_at', $date[0])
                 ->whereMonth('items.created_at', $date[1])
+                ->where('items.template_id', '!=', 1)
                 ->orderby('items.created_at', 'asc')
                 ->join('templates', 'items.template_id', 'templates.id')
                 ->selectRaw("items.amount as mount, items.template_id as template, templates.title as title")->get();
 
             $data = $items_temp->mapToGroups(function ($item, $key) {
-                return [$item['title'] => $item['mount']] ;
+                return [$item['title'] => $item['mount']];
             })->toArray();
-            
             $sumTotal = 0;
             foreach ($data as $key => $value) {
-                $sumTotal += round(array_sum($value), 2);
-                array_push($listItems, ['title' => $key , 'mount' => $sumTotal]);
+                $sumTotal = round(array_sum($value), 2);
+                array_push($listItems, ['title' => $key, 'mount' => $sumTotal >= 0 ? $sumTotal : $sumTotal * -1]);
             }
         }
 
-        $datas = collect($listItems)->mapToGroups(function($item, $key){
+        $datas = collect($listItems)->mapToGroups(function ($item, $key) {
             return [$item['title'] => $item['mount']];
         })->toArray();
 
 
         $series = array_keys($datas);
-        $labels = array_map(fn($e) => round(array_sum($e), 2) ,array_values($datas));
+        $labels = array_map(fn ($e) => round(array_sum($e), 2), array_values($datas));
 
         return response()->json([
             'res' => true,
